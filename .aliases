@@ -1,0 +1,45 @@
+alias profileme="history | awk '{print \$2}' | awk 'BEGIN{FS=\"|\"}{print \$1}' | sort | uniq -c | sort -n | tail -n 20 | sort -nr"
+alias df="df -Tm"
+alias cp="cp -i"
+alias cpr="cp -r"
+alias mv="mv -i"
+alias mkdir="mkdir -p"
+
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+alias .......="cd ../../../../../.."
+alias ........="cd ../../../../../../.."
+alias .........="cd ../../../../../../../.."
+alias ..........="cd ../../../../../../../../.."
+alias ...........="cd ../../../../../../../../../.."
+alias ............="cd ../../../../../../../../../../.."
+alias .............="cd ../../../../../../../../../../../.."
+alias ..............="cd ../../../../../../../../../../../../.."
+
+alias doihave="dpkg --get-selections | grep"
+alias wru="dpkg -L"
+alias j='jobs'
+alias jl='jobs -l'
+alias free='free -m'
+alias openports='sudo netstat -nape --inet'
+alias ns='netstat -alnp --protocol=inet|grep -v CLOSE_WAIT|cut -c-6,21-94|tail +2'
+alias sysinfo='uname -a && grep MemTotal /proc/meminfo && grep "model name" /proc/cpuinfo && lspci -tv && lsusb -tv && head -n1 /etc/issue'
+alias ai='apt-cache show' 
+alias aq='apt-cache search'
+alias ag='sudo apt-get install'
+alias aup='sudo apt-get update && sudo apt-get upgrade'
+
+## COLORS ##
+alias ls='ls --color=auto --ignore-backups'
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+alias Logs='colortail -n40 -f /var/log/syslog'
+
+alias MplayerCaca="mplayer -vo caca"

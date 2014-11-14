@@ -1,0 +1,34 @@
+umask 0002
+
+_AI()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
+    return 0
+}
+
+complete -F _AI ai
+_AQ()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
+    return 0
+}
+
+complete -F _AQ aq
+_AG()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
+    return 0
+}
+
+complete -F _AG ag
+
+#GREP_COLORS=ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36
