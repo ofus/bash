@@ -1,28 +1,18 @@
 # Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:$PATH"
 
-#echo "TERM='$TERM'"
-#echo "COLORTERM='$COLORTERM'\n"
-#printenv
-
 if [ "$COLORTERM" == "gnome-terminal" ] || [ "$COLORTERM" == "xfce4-terminal" ]
 then
-	#if [ "$TERM" == "xterm" ]
-	#then
-	#	TERM=xterm-256color
-	#fi
-
-	TERM=xterm-256color
-
-elif [ "$COLORTERM" == "rxvt-xpm" ]
-then
-	TERM=rxvt-256color
+    TERM=xterm-256color
+    elif [ "$COLORTERM" == "rxvt-xpm" ]
+    then
+        TERM=rxvt-256color
 fi
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{functions,extra,path,bash_prompt,exports,aliases,windows}; do
+for file in ~/.{functions,extra,path,bash_prompt,exports,aliases}; do
 	[ -r "$file" ] && source "$file"
 done
 unset file
