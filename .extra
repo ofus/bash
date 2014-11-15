@@ -1,5 +1,10 @@
 umask 0002
 
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+fi
+
 _AI()
 {
     local cur
@@ -30,5 +35,3 @@ _AG()
 }
 
 complete -F _AG ag
-
-#GREP_COLORS=ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36
