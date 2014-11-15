@@ -43,3 +43,4 @@ alias egrep='egrep --color=auto'
 alias Logs='colortail -n40 -f /var/log/syslog'
 
 alias MplayerCaca="mplayer -vo caca"
+alias Syslog='sudo colortail -n1000 /var/log/syslog'
