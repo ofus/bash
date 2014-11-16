@@ -159,3 +159,12 @@ function parse_git_dirty() {
 function parse_git_branch() {
         git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
 }
+
+function show_group_not_default() {
+    local u=$(whoami)
+    local curgrp=$(id -gn)
+    local defaultgrp=$(grep $(cat /etc/passwd | grep $u | cut --delimiter=: --fields=4) /etc/group |  cut --delimiter=: --fields=1)
+    if [ "$curgrp" != "$defaultgrp" ]; then
+        echo "($curgrp)"
+    fi
+}
