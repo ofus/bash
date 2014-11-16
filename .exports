@@ -11,6 +11,7 @@ export HISTTIMEFORMAT="[%Y-%m-%d - %H:%M:%S] "
 export LANG="en_US"
 export LC_ALL="en_US.UTF-8"
 
+##### Reference: http://www.matrix44.net/blog/?p=870 ######
 # Highlight section titles in manual pages
 # Less Colors for Man Pages
 export LESS_TERMCAP_mb=$'\E[1;30;48;5;226m'			# begin blinking
