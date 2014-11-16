@@ -171,7 +171,7 @@ function show_group_not_default() {
 
 function aqg() {
     if [ -z "${1}" ]; then
-        echo "ERROR: No search term specified."
+        echo "E: You must give at least one search pattern"
         return 1
     fi
 
