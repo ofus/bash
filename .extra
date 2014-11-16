@@ -13,8 +13,8 @@ _AI()
     COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
     return 0
 }
-
 complete -F _AI ai
+
 _AQ()
 {
     local cur
@@ -23,8 +23,8 @@ _AQ()
     COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
     return 0
 }
-
 complete -F _AQ aq
+
 _AG()
 {
     local cur
@@ -33,5 +33,15 @@ _AG()
     COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
     return 0
 }
-
 complete -F _AG ag
+
+_AQG()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
+    return 0
+}
+complete -F _AQ aqg
+

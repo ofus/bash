@@ -163,8 +163,18 @@ function parse_git_branch() {
 function show_group_not_default() {
     local u=$(whoami)
     local curgrp=$(id -gn)
-    local defaultgrp=$(grep $(cat /etc/passwd | grep $u | cut --delimiter=: --fields=4) /etc/group |  cut --delimiter=: --fields=1)
+    local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut --delimiter=: --fields=4):" /etc/group |  cut --delimiter=: --fields=1)
     if [ "$curgrp" != "$defaultgrp" ]; then
         echo "($curgrp)"
     fi
+}
+
+function aqg() {
+    if [ -z "${1}" ]; then
+        echo "ERROR: No search term specified."
+        return 1
+    fi
+
+    local aq="${1}"
+    apt-cache search $aq | grep -v lib | grep -i $aq
 }
