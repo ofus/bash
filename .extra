@@ -45,3 +45,45 @@ _AQG()
 }
 complete -F _AQ aqg
 
+_composer()
+{
+    local cur prev opts base packages cmd actions
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    cmd=${COMP_WORDS[0]}
+    actions=$( $cmd list --raw | cut -f 1 -d " " | tr "\n" " " )
+    packages=$( sed 's/,/\n/g' $HOME/.composer/cache/repo/https---packagist.org/p-provider-archived.json | sed 's/"//g' | sed 's/\:/\t/g' | awk {' print $1 '} | sed 's/\\\//\//g' | grep -v '{' 2> /dev/null )
+    opts=$( $cmd --no-ansi $cur 2>/dev/null  | awk {' print $1 '} 2>/dev/null | grep "\-\-" | tr "\n" " " )
+    
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+    
+    if ($cmd > /dev/null 2>&1); then
+        case "${prev}" in
+            require)
+                COMPREPLY=( $(compgen -W "$packages" -- "$cur" ) )
+                return 0
+                ;;
+            install)
+                COMPREPLY=( $(compgen -W "$packages" -- "$cur" ) )
+                return 0
+                ;;
+            derp)
+                COMPREPLY=( $(compgen -W "herp derp herpderp hurr fuuu" -- "$cur" ) )
+                return 0
+                ;;
+            *)
+                ;;
+        esac
+    fi
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+
+    COMPREPLY=( $(compgen -W "$actions" -- $cur) )
+}
+complete -F _composer composer
