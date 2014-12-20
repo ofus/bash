@@ -152,6 +152,15 @@ function getcertnames() {
 	fi
 }
 
+function parse_bzr_dirty() {
+        [[ $(bzr status 2> /dev/null | wc -l) != 0 ]] && echo "*"
+}
+
+function parse_bzr_changes() {
+        BZR_CHANGES=$(bzr status 2> /dev/null | wc -l)
+        [[ $BZR_CHANGES != 0 ]] && echo "[$BZR_CHANGES]"
+}
+
 function parse_git_dirty() {
         [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
 }
@@ -176,5 +185,6 @@ function aqg() {
     fi
 
     local aq="${1}"
-    apt-cache search $aq | grep -v lib | grep -i $aq
+    apt-cache search $aq | grep -v lib | grep -i --color $aq
 }
+
