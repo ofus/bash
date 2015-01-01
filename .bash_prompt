@@ -39,21 +39,11 @@ fi
 
 BIWHITE='\e[1;97m'
 
-#export MAGENTA
-#export ORANGE
-#export GREEN
-#export PURPLE
-#export WHITE
-#export BOLD
-#export RESET
-
 if [[ `whoami` = "root" ]]; then
-    #USERCOLOR=$RED
     USERCOLOR='\e[48;5;160m'
 else
     USERCOLOR=$MAGENTA
 fi
 
-#export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\]\$(show_group_not_default) \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
-export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\]\$(show_group_not_default) \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$YELLOW\]\$(parse_bzr_changes)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
+export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\]\$(show_group_not_default) \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"
