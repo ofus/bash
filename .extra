@@ -45,6 +45,27 @@ _AQG()
 }
 complete -F _AQ aqg
 
+_PSQ()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    processes=$( ps -A | awk '{print $NF}' | grep -v '\/' | sort | uniq | sed ':a;N;$!ba;s/\n/\ /g' )
+    COMPREPLY=( $(compgen -W "$processes" -- "$cur" ) )
+    return 0
+}
+complete -F _PSQ psgrep
+
+_CQ()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    local cterm
+    cterm="3DES aDSS aECDH AECDH aECDSA AES AES128 AES256 AESGCM aFZA ALL aRSA CAMELLIA CAMELLIA128 CAMELLIA256 DES DH DHE DSS ECDH ECDSA EDH EECDH eFZA EXPORT FIPS FZA GCM GCN GOST HIGH kDHd kDHr kEDH kEECDH kFZA kRSA LOW MD5 MEDIUM NULL PSK PSKSRP RC4 RSA SEED SHA SHA256 SHA384 SSLv3 SUITEB TLSv1 TLSv1.2"
+    COMPREPLY=( $(compgen -W "$cterm" -- "$cur" ) )
+    return 0
+}
+complete -F _CQ cq
+
 _composer()
 {
     local cur prev opts base packages cmd actions
@@ -53,6 +74,10 @@ _composer()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     cmd=${COMP_WORDS[0]}
     actions=$( $cmd list --raw | cut -f 1 -d " " | tr "\n" " " )
+	archivefilename=$HOME/.composer/cache/repo/https---packagist.org/p-provider-archived.json
+	if [ !-r "$archivefilename" ]; then
+		return 0
+	fi
     packages=$( sed 's/,/\n/g' $HOME/.composer/cache/repo/https---packagist.org/p-provider-archived.json | sed 's/"//g' | sed 's/\:/\t/g' | awk {' print $1 '} | sed 's/\\\//\//g' | grep -v '{' 2> /dev/null )
     opts=$( $cmd --no-ansi $cur 2>/dev/null  | awk {' print $1 '} 2>/dev/null | grep "\-\-" | tr "\n" " " )
     
