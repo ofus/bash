@@ -176,5 +176,5 @@ function aqg() {
     fi
 
     local aq="${1}"
-    apt-cache search $aq | grep -v lib | grep -i $aq
+    apt-cache search $aq | grep -v lib | grep -i --color $aq
 }
