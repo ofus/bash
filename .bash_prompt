@@ -1,9 +1,3 @@
-if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
-	export TERM=gnome-256color
-elif infocmp xterm-256color >/dev/null 2>&1; then
-	export TERM=xterm-256color
-fi
-
 if tput setaf 1 &> /dev/null; then
 	tput sgr0
 	if [[ $(tput colors) -ge 256 ]] 2>/dev/null; then
@@ -36,7 +30,6 @@ else
 	BOLD=""
 	RESET="\033[m"
 fi
-
 BIWHITE='\e[1;97m'
 
 if [[ `whoami` = "root" ]]; then
@@ -45,5 +38,6 @@ else
     USERCOLOR=$MAGENTA
 fi
 
-export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\]\$(show_group_not_default) \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
+export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\]\$(show_group_not_default) \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$YELLOW\]\$(parse_bzr_changes)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"
+
