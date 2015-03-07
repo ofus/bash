@@ -36,7 +36,7 @@ alias aarm='sudo apt-get autoremove'
 alias aun='sudo apt-get remove'
 
 ## COLORS ##
-alias ls='ls --color=auto --ignore-backups'
+alias ls='ls --color=auto --ignore-backups --time-style="+%x %X"'
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
 alias grep='grep --color=auto'
