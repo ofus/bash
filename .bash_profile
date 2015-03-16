@@ -1,18 +1,18 @@
 # Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:$PATH"
 
-if [ "$COLORTERM" == "gnome-terminal" ] || [ "$COLORTERM" == "xfce4-terminal" ]
-then
-    TERM=xterm-256color
-    elif [ "$COLORTERM" == "rxvt-xpm" ]
-    then
-        TERM=rxvt-256color
-fi
+# if [ "$COLORTERM" == "gnome-terminal" ] || [ "$COLORTERM" == "xfce4-terminal" ]
+# then
+    # TERM=xterm-256color
+    # elif [ "$COLORTERM" == "rxvt-xpm" ]
+    # then
+        # TERM=rxvt-256color
+# fi
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{functions,extra,bash_prompt,exports,aliases,localvars,path}; do
+for file in ~/.{bash_functions,extra,bash_prompt,exports,bash_aliases,localvars,path}; do
 	[ -r "$file" ] && source "$file"
 done
 unset file
@@ -44,7 +44,7 @@ done
 # You could just use `-g` instead, but I like being explicit
 #complete -W "NSGlobalDomain" defaults
 
-# enable color support of ls and also add handy aliases
+# enable color support of ls and also add handy bash_aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
