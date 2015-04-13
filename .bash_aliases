@@ -32,6 +32,7 @@ alias ai='apt-cache show'
 alias aq='apt-cache search'
 alias ag='sudo apt-get install'
 alias aup='sudo apt-get update && sudo apt-get upgrade'
+alias aupd='sudo apt-get update'
 alias aarm='sudo apt-get autoremove'
 alias aun='sudo apt-get remove'
 
@@ -48,4 +49,5 @@ alias Logs='colortail -n40 -f /var/log/syslog'
 alias MplayerCaca="mplayer -vo caca"
 alias Syslog='sudo colortail -n1000 /var/log/syslog'
 alias sslscan2="nmap --script +ssl-enum-ciphers -p443"
-alias composer="php composer.phar --ansi"
+alias composer="composer --ansi"
+alias xmlto='xmlto --skip-validation'
