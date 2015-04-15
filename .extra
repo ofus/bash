@@ -63,7 +63,7 @@ _AUN()
     COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} "$cur" 2> /dev/null ) )
     return 0
 }
-complete -F _AQ un
+complete -F _AQ aun
 
 _PSQ()
 {
