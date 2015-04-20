@@ -199,6 +199,27 @@ function aiv() {
     apt-cache show $aq | grep Version
 }
 
+function bqg() {
+    if [ -z "${1}" ]; then
+        echo "E: You must give at least one search pattern"
+        return 1
+    fi
+
+    local aq="${1}"
+    #apt-cache search $aq | grep -v lib | grep -i --color $aq
+    brew search $aq | grep -i --color $aq
+}
+
+function biv() {
+    if [ -z "${1}" ]; then
+        echo "E: You must give at least one search pattern"
+        return 1
+    fi
+
+    local aq="${1}"
+    brew info $aq | head -n1
+}
+
 function psgrep() {
     if [ -z "${1}" ]; then
         echo "E: You must give at least one search pattern"
