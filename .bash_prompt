@@ -38,6 +38,6 @@ else
     USERCOLOR=$MAGENTA
 fi
 
-export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\]\$(show_group_not_default) \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$YELLOW\]\$(parse_bzr_changes)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
+export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\] \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$YELLOW\]\$(parse_bzr_changes)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"
 

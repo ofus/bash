@@ -97,3 +97,14 @@ _CQN()
 }
 complete -F _CQN cqn
 
+_VAGRANT()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    local cterm
+	cterm="box connect destroy docker-logs docker-run global-status halt help init list-commands login package plugin provision push rdp reload resume rsync rsync-auto share ssh ssh-config status suspend up version"
+    COMPREPLY=( $(compgen -W "$cterm" -- "$cur" ) )
+    return 0
+}
+complete -F _VAGRANT vagrant
+
