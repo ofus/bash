@@ -172,7 +172,7 @@ function parse_git_branch() {
 function show_group_not_default() {
     local u=$(whoami)
     local curgrp=$(id -gn)
-    local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut -d: -f4):" /etc/group |  cut -d: -f41)
+    local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut -d: -f4):" /etc/group |  cut -d: -f1)
     if [ "$curgrp" != "$defaultgrp" ]; then
         echo "($curgrp)"
     fi
