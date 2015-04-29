@@ -35,9 +35,9 @@ BIWHITE='\e[1;97m'
 if [[ `whoami` = "root" ]]; then
     USERCOLOR='\e[48;5;160m'
 else
-    USERCOLOR=$MAGENTA
+    USERCOLOR=$(tput setaf 1)
 fi
-
-export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\] \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$YELLOW\]\$(parse_bzr_changes)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
+GRAY=$(tput setaf 7)
+export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\] \[$GRAY\]@ \[$BOLD$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$YELLOW\]\$(parse_bzr_changes)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"
 
