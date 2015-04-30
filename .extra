@@ -75,6 +75,18 @@ _PSQ()
 }
 complete -F _PSQ psgrep
 
+_CSCAN()
+{
+    #~/.cipherscan/hosts.log
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    hosts=$( cat $HOME/.cipherscan/hosts.log | grep "\." | sed ':a;N;$!ba;s/\n/\ /g' )
+    COMPREPLY=( $(compgen -W "$hosts" -- "$cur" ) )
+    return 0
+}
+complete -F _CSCAN cs
+complete -F _CSCAN cipherscan
+
 _CQ()
 {
     local cur
