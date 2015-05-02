@@ -35,9 +35,15 @@ BIWHITE='\e[1;97m'
 if [[ `whoami` = "root" ]]; then
     USERCOLOR='\e[48;5;160m'
 else
-    USERCOLOR=$(tput setaf 1)
+    USERCOLOR=$MAGENTA
 fi
-GRAY=$(tput setaf 7)
-export PS1="\[${BOLD}${USERCOLOR}\]\u\[$RESET\]\[$GREEN\] \[$GRAY\]@ \[$BOLD$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$YELLOW\]\$(parse_bzr_changes)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
+
+function getrandcolor() {
+    local COLORNUM=$(shuf -i 17-231 -n 1)
+    local NEWCOLOR=$(tput setaf $COLORNUM)
+    echo $NEWCOLOR
+}
+
+export PS1="\$(getrandcolor)\u\[$RESET\]\[$GREEN\]\$(show_group_not_default) \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$YELLOW\]\$(parse_bzr_changes)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"
 
