@@ -3,7 +3,7 @@ export EDITOR="/usr/local/bin/mate -w"
 
 export HISTIGNORE="\&:ls:ll:la:cd:fg:bg:exit:clear"   # don't append consecutive duplicates of these
 export HISTCONTROL=ignoreboth       # ingore duplicates and spaces (ignoreboth|ignoredups|ignorespace)
-export HISTSIZE=20000               # bash history will save N commands
+export HISTSIZE=200000              # bash history will save N commands
 export HISTFILESIZE=${HISTSIZE}     # bash will remember N commands
 export HISTTIMEFORMAT="[%Y-%m-%d - %H:%M:%S] "
 
@@ -28,3 +28,4 @@ export LESS_TERMCAP_ue=$'\E[0m'			# end underline
 # Don’t clear the screen after quitting a manual page
 export MANPAGER="less -X"
 
+export BZR_LOG="/dev/null"
