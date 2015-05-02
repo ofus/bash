@@ -35,12 +35,12 @@ alias aup='sudo apt-get update && sudo apt-get upgrade'
 alias aupd='sudo apt-get update'
 alias aarm='sudo apt-get autoremove'
 alias aun='sudo apt-get remove'
-alias bi='brew info' 
-alias bq='brew search'
-alias bin='brew install'
-alias bup='brew update && brew upgrade'
-alias bupd='brew update'
-alias bun='brew uninstall'
+# alias bi='brew info' 
+# alias bq='brew search'
+# alias bin='brew install'
+# alias bup='brew update && brew upgrade'
+# alias bupd='brew update'
+# alias bun='brew uninstall'
 
 
 ## COLORS ##
