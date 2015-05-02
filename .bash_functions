@@ -273,14 +273,6 @@ function psgrep() {
     ps aux | grep -v 'grep' | grep -i --color $psquery
 }
 
-function ssl3test() {
-    if [ -z "${1}" ]; then
-        echo "E: You must give a hostname"
-        return 1
-    fi
-    local foo="${1}"
-}
-
 function parse_svn_dirty() {
  [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo "*"
 }
