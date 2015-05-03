@@ -301,3 +301,11 @@ function svn_check_for_remote_updates() {
     fi
 }
 
+function rot13() {
+    if [ -z "${1}" ]; then
+        echo "E: You must give a string to convert"
+        return 1
+    fi
+    local foo="${@}"
+    echo "$foo" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+}
