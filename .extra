@@ -109,3 +109,14 @@ _VAGRANT()
 complete -F _VAGRANT vagrant
 
 
+_BITBUCKET()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    local cterm
+	cterm="create update delete clone create_from_local pull_request pull download list privilege"
+    COMPREPLY=( $(compgen -W "$cterm" -- "$cur" ) )
+    return 0
+}
+complete -F _BITBUCKET bitbucket
+complete -F _BITBUCKET bb

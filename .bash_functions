@@ -341,3 +341,12 @@ function getrandcolor() {
     echo $NEWCOLOR
 }
 
+no_newlines() {
+    local foo="${@}"
+    echo "$foo" | sed ':a;N;$!ba;s/\n/ /g'
+}
+
+no_blank_lines() {
+    local foo="${@}"
+    echo "$foo" | sed 's/\r//g' | sed ':a;N;ba;s/\n\n/\n/g' 
+}
