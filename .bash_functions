@@ -173,7 +173,8 @@ function show_group_not_default() {
     local u=$(whoami)
     local curgrp=$(id -gn)
     local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut -d: -f4):" /etc/group |  cut -d: -f1)
-    if [ "$curgrp" != "$defaultgrp" ]; then
+    [[ "$defaultgrp" == "" ]] && return 0
+	if [ "$curgrp" != "$defaultgrp" ]; then
         echo "($curgrp)"
     fi
 }
@@ -255,16 +256,11 @@ function cqn() {
     openssl ciphers -v "$bar" | column -t | grep -v ECDSA | grep -v "DH-"
 }
 
-function comptest() {
-    if [ -z "${1}" ]; then
-        echo "E: You must give at least one search pattern"
-        return 1
-    fi
-    local foo="${@}"
-    echo foo=\"$foo\"
-}
-
 function wp() {
+	if ! type wikipedia2text > /dev/null; then
+		echo "wikipedia2text not installed"
+		return 1
+	fi
     if [ -z "${1}" ]; then
         echo "E: You must give a hostname"
         return 1
@@ -322,3 +318,26 @@ function rot13() {
     local foo="${@}"
     echo "$foo" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 }
+
+get_sha() {
+    git rev-parse --short HEAD 2>/dev/null
+}
+
+get_dir() {
+    printf "%s" $(pwd | sed "s:$HOME:~:")
+}
+
+function set_titlebar {
+    case $TERM in
+        *xterm*|ansi|rxvt)
+            printf "\033]0;%s\007" "$*"
+            ;;
+    esac
+}
+
+function getrandcolor() {
+    local COLORNUM=$(shuf -i 17-231 -n 1)
+    local NEWCOLOR=$(tput setaf $COLORNUM)
+    echo $NEWCOLOR
+}
+
