@@ -42,6 +42,6 @@ HOSTCOLOR=$(tput setaf 208)
 GROUPCOLOR=$(tput setaf 119)
 ATCOLOR=$BIWHITE
 
-export PS1="[ $USERCOLOR\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\h \[$GREEN\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
+export PS1="[ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\h \[$GREEN\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"
 
