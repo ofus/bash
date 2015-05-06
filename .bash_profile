@@ -12,19 +12,12 @@ PATH="$HOME/bin:$PATH"
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,bash_functions,extra,bash_prompt,exports,bash_aliases,localvars}; do
+for file in ~/.{path,bash_functions,bash_prompt,exports,bash_aliases,extra}; do
 	[ -r "$file" ] && source "$file"
 done
 unset file
 
-##shopt -s nocaseglob		# Case-insensitive globbing (used in pathname expansion)
-#shopt -s histappend			# Append to the Bash history file, rather than overwriting it
-##shopt -s cdspell			# Autocorrect typos in path names when using `cd`
-#shopt -s checkwinsize		# check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
-
 # Enable some Bash 4 features when possible:
-# * `autocd`, e.g. `**/qux` will enter `./foo/bar/baz/qux`
-# * Recursive globbing, e.g. `echo **/*.txt`
 for option in histappend checkwinsize autocd globstar; do
 	shopt -s "$option" 2> /dev/null
 done
@@ -41,12 +34,23 @@ if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
-if ! shopt -oq posix; then
-  if [ -f /usr/local/share/bash-completion/bash_completion ]; then
-    . /usr/local/share/bash-completion/bash_completion
-  elif [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+# Check for interactive bash and that we haven't already been sourced.
+[ -z "$BASH_VERSION" -o -z "$PS1" -o -n "$BASH_COMPLETION" ] && return
+
+# Check for recent enough version of bash.
+bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
+if [ $bmajor -gt 3 ] || [ $bmajor -eq 3 -a $bminor -ge 2 ]; then
+	if ! shopt -oq posix; then
+	    if shopt -q progcomp && [ -r /usr/local/Cellar/bash-completion/1.3/etc/bash_completion ]; then
+	        . /usr/local/Cellar/bash-completion/1.3/etc/bash_completion
+		elif [ -f /usr/local/share/bash-completion/bash_completion ]; then
+	        . /usr/local/share/bash-completion/bash_completion
+	    elif [ -f /usr/share/bash-completion/bash_completion ]; then
+	        . /usr/share/bash-completion/bash_completion
+	    elif [ -f /etc/bash_completion ]; then
+	        . /etc/bash_completion
+	    fi
+	fi
+	[ -r "~/.bash_completion" ] && source "~/.bash_completion"
 fi
+unset bash bmajor bminor
