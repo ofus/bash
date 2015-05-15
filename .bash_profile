@@ -51,6 +51,7 @@ if [ $bmajor -gt 3 ] || [ $bmajor -eq 3 -a $bminor -ge 2 ]; then
 	        . /etc/bash_completion
 	    fi
 	fi
-	[ -r "~/.bash_completion" ] && source "~/.bash_completion"
+	#[ -r "~/.bash_completion" ] && source "~/.bash_completion"
 fi
 unset bash bmajor bminor
+[ -r "~/.bash_completion" ] && source "~/.bash_completion"

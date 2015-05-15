@@ -114,7 +114,7 @@ _BITBUCKET()
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
     local cterm
-	cterm="create update delete clone create_from_local pull_request pull download list privilege"
+	cterm="create update delete clone create_from_local pull_request pull download list privilege group-privilege add_remote"
     COMPREPLY=( $(compgen -W "$cterm" -- "$cur" ) )
     return 0
 }
