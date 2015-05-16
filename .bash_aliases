@@ -59,6 +59,5 @@ alias sslscan2="nmap --script +ssl-enum-ciphers -p443"
 alias composer="composer --ansi"
 alias xmlto='xmlto --skip-validation'
 alias ll='ls -al'
-alias gcrypt="gpg --recipient andrew@aljweb.com --encrypt-files"
 
-alias pull-request="bb pull_request --debug --title test --reponame sellyourgold.com --owner urldigital"
+alias grm='git branch -D'

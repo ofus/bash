@@ -120,3 +120,14 @@ _BITBUCKET()
 }
 complete -F _BITBUCKET bitbucket
 complete -F _BITBUCKET bb
+
+_GRM()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    local cterm
+	cterm=$(git branch --no-color 2> /dev/null | sed 's/*/ /g' 2> /dev/null )
+    COMPREPLY=( $(compgen -W "$cterm" -- "$cur" ) )
+    return 0
+}
+complete -F _GRM grm
