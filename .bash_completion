@@ -75,18 +75,6 @@ _PSQ()
 }
 complete -F _PSQ psgrep
 
-_CSCAN()
-{
-    #~/.cipherscan/hosts.log
-    local cur
-    cur=${COMP_WORDS[COMP_CWORD]}
-    hosts=$( cat $HOME/.cipherscan/hosts.log | grep "\." | sed ':a;N;$!ba;s/\n/\ /g' )
-    COMPREPLY=( $(compgen -W "$hosts" -- "$cur" ) )
-    return 0
-}
-complete -F _CSCAN cs
-complete -F _CSCAN cipherscan
-
 _CQ()
 {
     local cur
@@ -109,3 +97,37 @@ _CQN()
 }
 complete -F _CQN cqn
 
+_VAGRANT()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    local cterm
+	cterm="box connect destroy docker-logs docker-run global-status halt help init list-commands login package plugin provision push rdp reload resume rsync rsync-auto share ssh ssh-config status suspend up version"
+    COMPREPLY=( $(compgen -W "$cterm" -- "$cur" ) )
+    return 0
+}
+complete -F _VAGRANT vagrant
+
+
+_BITBUCKET()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    local cterm
+	cterm="create update delete clone create_from_local pull_request pull download list privilege group-privilege add_remote"
+    COMPREPLY=( $(compgen -W "$cterm" -- "$cur" ) )
+    return 0
+}
+complete -F _BITBUCKET bitbucket
+complete -F _BITBUCKET bb
+
+_GRM()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    local cterm
+	cterm=$(git branch --no-color 2> /dev/null | sed 's/*/ /g' 2> /dev/null )
+    COMPREPLY=( $(compgen -W "$cterm" -- "$cur" ) )
+    return 0
+}
+complete -F _GRM grm
