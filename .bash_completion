@@ -126,3 +126,92 @@ _GRM()
     return 0
 }
 complete -F _GRM grm
+
+_COMPOSER()
+{
+    local foo="${@}"
+    local cur prev opts base packages package_names package_repos cmd actions cache_repo_dir cache_file last_argument
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    cmd=${COMP_WORDS[0]}
+    actions=$( $cmd list --raw | cut -f 1 -d " " | tr "\n" " " )
+    cache_repo_dir=$($cmd --no-ansi config -g cache-repo-dir)
+    cache_file=$cache_repo_dir/https---packagist.org/p-provider-latest.json
+    opts=$( $cmd --raw $cur 2>/dev/null  | awk {' print $1 '} 2>/dev/null | grep "\-\-" | tr "\n" " " )
+    packages=''
+    if [ -f $cache_file ]; then
+        packages=$(sed 's/,/\n/g' $cache_file | sed 's/"//g' | sed 's/\:/\t/g' | awk {' print $1 '}  2> /dev/null )
+        echo $packages > ~/packages.txt
+    fi
+
+    if [[ ${cur} == -* ]] ; then
+        if ($cmd > /dev/null 2>&1); then
+            case "${prev}" in
+                composer)
+                    ;;
+                composer.phar)
+                    ;;
+                *)
+                    opts=$( $cmd --raw help $prev 2>/dev/null  | awk {' print $1 '} 2>/dev/null | grep "\-\-" | tr "\n" " " )
+            esac
+        fi
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+
+    if ($cmd > /dev/null 2>&1); then
+        case "${prev}" in
+            require)
+                COMPREPLY=( $(compgen -W "$packages" -- "$cur" ) )
+                return 0
+                ;;
+            install)
+                COMPREPLY=( $(compgen -W "$packages" -- "$cur" ) )
+                return 0
+                ;;
+            info)
+                COMPREPLY=( $(compgen -W "$packages" -- "$cur" ) )
+                return 0
+                ;;
+            depends)
+                COMPREPLY=( $(compgen -W "$packages" -- "$cur" ) )
+                return 0
+                ;;
+            search)
+                COMPREPLY=( $( $cmd --no-ansi search "$cur" 2> /dev/null | sed 's/\// /g' 2> /dev/null | awk {' print $2 '} 2> /dev/null ) )
+                return 0
+                ;;
+            show)
+                COMPREPLY=( $(compgen -W "$packages" -- "$cur" ) )
+                return 0
+                ;;
+            *)
+                ;;
+        esac
+    fi
+
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+
+    COMPREPLY=( $(compgen -W "$actions" -- $cur) )
+}
+complete -F _COMPOSER composer
+
+_ADB()
+{
+    local foo="${@}"
+    local cur prev opts base cmd actions
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    cmd=${COMP_WORDS[0]}
+    actions=$(adb 2>&1 | grep "  adb " | awk {' print $2 '} | sort | uniq)
+    if [[ $COMP_CWORD == 1 ]] ; then
+       COMPREPLY=( $(compgen -W "$actions" -- $cur) )
+       return 0
+    fi
+    return 0
+}
+complete -F _ADB adb
