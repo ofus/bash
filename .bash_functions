@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Simple calculator
 function calc() {
 	local result=""
@@ -38,7 +40,7 @@ function fs() {
 # Use Git’s colored diff when available
 hash git &>/dev/null
 if [ $? -eq 0 ]; then
-	function diff() {
+	function gdiff() {
 		git diff --no-index --color-words "$@"
 	}
 fi
@@ -349,3 +351,7 @@ function nolines() {
 function noblanklines() {
 	sed '/^$/d'
 }	
+
+function gcrypt() {
+    gpg --encrypt-files "${@}" && rm "${@}"
+}
