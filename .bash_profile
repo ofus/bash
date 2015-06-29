@@ -1,5 +1,9 @@
+#!/bin/bash
+
 # Add `~/bin` to the `$PATH`
 PATH="$HOME/bin:$PATH"
+
+umask 0002
 
 # if [ "$COLORTERM" == "gnome-terminal" ] || [ "$COLORTERM" == "xfce4-terminal" ]
 # then
