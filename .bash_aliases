@@ -1,3 +1,5 @@
+#!/bin/bash
+
 alias profileme="history | cut -f 2- -d \"]\" | awk 'BEGIN{FS=\"|\"}{print \$1}' | sort | uniq -c | sort -n | tail -n 20 | sort -nr"
 alias IPAddress="ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print \$2}' | cut -f1  -d'/'"
 alias df="df -Tm"
@@ -51,6 +53,7 @@ alias Syslog='sudo colortail -n1000 /var/log/syslog'
 alias sslscan2="nmap --script +ssl-enum-ciphers -p443"
 alias composer="composer --ansi"
 alias xmlto='xmlto --skip-validation'
-alias ll='ls -al'
+alias ll='ls -lA'
+alias lt='ls -lhStrA'
 
 alias grm='git branch -D'
