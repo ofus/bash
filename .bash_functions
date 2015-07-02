@@ -187,7 +187,7 @@ function aqg() {
 
     local aq="${1}"
     #apt-cache search $aq | grep -v lib | grep -i --color $aq
-    apt-cache search $aq | grep -i --color $aq
+    apt-cache search $aq | sort | grep -i --color $aq
 }
 
 function aiv() {
