@@ -380,3 +380,8 @@ function valid_ip()
     fi
     return $stat
 }
+
+function external_ip()
+{
+    wget -q -O - http://checkip.dyndns.org|sed s/[^0-9.]//g
+}
