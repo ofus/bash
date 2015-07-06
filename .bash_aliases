@@ -57,3 +57,4 @@ alias ll='ls -lA'
 alias lt='ls -lhStrA'
 
 alias grm='git branch -D'
+alias RmHost="ssh-keygen -f \"$HOME/.ssh/known_hosts\" -R "
