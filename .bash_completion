@@ -215,3 +215,18 @@ _ADB()
     return 0
 }
 complete -F _ADB adb
+
+_RMHOST()
+{
+    local cur
+    local hosts
+    cur=${COMP_WORDS[COMP_CWORD]}
+    #hosts="$(grep -v '#' $HOME/.ssh/known_hosts | awk {' print $1 '})"
+    #COMPREPLY=( $( awk {' print $1 '} $HOME/.ssh/known_hosts | grep -v "$cur" | grep -v '#' 2> /dev/null ) )
+    hosts=$( awk {' print $1 '} $HOME/.ssh/known_hosts | grep -v '#' | tr '\n' ' ' 2> /dev/null )
+    COMPREPLY=( $(compgen -W "$hosts" -- "$cur" ) )
+    return 0
+}
+complete -F _RMHOST RmHost
+
+
