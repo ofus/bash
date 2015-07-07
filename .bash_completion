@@ -39,6 +39,7 @@ _AG()
     return 0
 }
 complete -F _AG ag
+complete -F _AG agdl
 
 _AQG()
 {

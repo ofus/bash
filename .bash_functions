@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Simple calculator
 function calc() {
 	local result=""
@@ -298,11 +300,11 @@ function rot13() {
     echo "$foo" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 }
 
-get_sha() {
+function get_sha() {
     git rev-parse --short HEAD 2>/dev/null
 }
 
-get_dir() {
+function get_dir() {
     printf "%s" $(pwd | sed "s:$HOME:~:")
 }
 
