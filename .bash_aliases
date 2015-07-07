@@ -33,11 +33,11 @@ alias sysinfo='uname -a && grep MemTotal /proc/meminfo && grep "model name" /pro
 alias ai='apt-cache show' 
 alias aq='apt-cache search'
 alias ag='sudo apt-get install'
-alias agdl='sudo apt-get --download-only -y install'
+alias agdl='sudo apt-get --download-only install'
 alias aup='sudo apt-get update && sudo apt-get upgrade'
 alias aupd='sudo apt-get update'
-alias aupdl='sudo apt-get upgrade --download-only -y'
-alias aarm='sudo apt-get -y autoremove'
+alias aupdl='sudo apt-get upgrade --download-only'
+alias aarm='sudo apt-get autoremove'
 alias aun='sudo apt-get remove'
 
 ## COLORS ##
