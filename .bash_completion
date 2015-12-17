@@ -230,3 +230,24 @@ _RMHOST()
 complete -F _RMHOST RmHost
 
 
+_KEYBASE()
+{
+    local cur prev opts opts2base cmd actions
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    cmd=${COMP_WORDS[0]}
+    opts=$(keybase --help 2>/dev/null | tr " " "\n"| grep "\-\-" | grep -v "\[")
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+
+    actions=$(keybase -h | grep "{" | head -n1  | sed "s/^[ \t]*//" | sed "s/[{}]*//" | sed 's/}//g' | tr "," " ")
+    #COMPREPLY=( $(compgen -W "$actions" -- $cur) )
+    if [[ $COMP_CWORD == 1 ]] ; then
+       COMPREPLY=( $(compgen -W "$actions" -- $cur) )
+       return 0
+    fi
+    return 0
+}
+complete -F _KEYBASE keybase
