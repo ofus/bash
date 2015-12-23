@@ -1,5 +1,3 @@
-#!/bin/bash
-
 if tput setaf 1 &> /dev/null; then
 	tput sgr0
 	if [[ $(tput colors) -ge 256 ]] 2>/dev/null; then
@@ -37,16 +35,14 @@ BIWHITE='\e[1;97m'
 if [[ `whoami` = "root" ]]; then
     USERCOLOR='\e[48;5;160m'
 else
-    USERCOLOR=$MAGENTA
+    USERCOLOR=$(tput setaf 38)
 fi
 
-function getrandcolor() {
-    local COLORNUM=$(shuf -i 17-231 -n 1)
-    local NEWCOLOR=$(tput setaf $COLORNUM)
-    echo $NEWCOLOR
-}
+HOSTCOLOR=$(tput setaf 208)
+GROUPCOLOR=$(tput setaf 119)
+PWDCOLOR=$(tput setaf 11)
+ATCOLOR=$BIWHITE
 
-#export PS1="\$(getrandcolor)\u\[$RESET\]\[$GREEN\]\$(show_group_not_default) \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$YELLOW\]\$(parse_bzr_changes)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
-export PS1="\[$USERCOLOR\]\u\[$RESET\]\[$GREEN\]\$(show_group_not_default) \[$BIWHITE\]at \[$ORANGE\]\H \[$BIWHITE\]in \[$GREEN\]\w\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$BIWHITE\]\n\$ \[$RESET\]"
+export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"
 
