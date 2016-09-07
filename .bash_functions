@@ -190,6 +190,10 @@ function aqg() {
     apt-cache search $aq | grep -i --color $aq
 }
 
+function show_installed() {
+	grep Install /var/log/apt/history.log | sed 's/Install: //g' | sed 's/:amd64//g' | sed 's/(/[/g' | sed 's/)/]/g' | sed -e 's/\[[^][]*\]//g' | sed 's/ , /\n/g'
+}
+
 function aiv() {
     if [ -z "${1}" ]; then
         echo "E: You must give at least one search pattern"
