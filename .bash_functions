@@ -153,20 +153,20 @@ function getcertnames() {
 }
 
 function parse_bzr_dirty() {
-        [[ $(bzr status 2> /dev/null | wc -l) != 0 ]] && echo "*"
+    [[ $(bzr status 2> /dev/null | wc -l) != 0 ]] && echo "*"
 }
 
 function parse_bzr_changes() {
-        BZR_CHANGES=$(bzr status 2> /dev/null | wc -l)
-        [[ $BZR_CHANGES != 0 ]] && echo "[$BZR_CHANGES]"
+    BZR_CHANGES=$(bzr status 2> /dev/null | wc -l)
+    [[ $BZR_CHANGES != 0 ]] && echo "[$BZR_CHANGES]"
 }
 
 function parse_git_dirty() {
-        [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
+    [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
 }
 
 function parse_git_branch() {
-        git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
 }
 
 function show_group_not_default() {
