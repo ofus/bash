@@ -1,6 +1,6 @@
 # Add `~/bin` to the `$PATH`
 PATH="$HOME/bin:$PATH"
-
+TERM=xterm-256color
 # if [ "$COLORTERM" == "gnome-terminal" ] || [ "$COLORTERM" == "xfce4-terminal" ]
 # then
     # TERM=xterm-256color
@@ -12,10 +12,12 @@ PATH="$HOME/bin:$PATH"
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,bash_functions,bash_prompt,exports,bash_aliases,extra}; do
+for file in ~/.{path,bash_functions,exports,bash_aliases,extra}; do
 	[ -r "$file" ] && source "$file"
 done
 unset file
+
+set_prompt
 
 # Enable some Bash 4 features when possible:
 for option in histappend checkwinsize autocd globstar; do
@@ -28,7 +30,6 @@ done
 # Add tab completion for `defaults read|write NSGlobalDomain`
 # You could just use `-g` instead, but I like being explicit
 #complete -W "NSGlobalDomain" defaults
-umask 0002
 
 # enable color support of ls and also add handy bash_aliases
 if [ -x /usr/bin/dircolors ]; then

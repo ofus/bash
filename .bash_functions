@@ -336,3 +336,25 @@ function noblanklines() {
 function 256colors() {
     for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
 }
+
+function set_prompt() {
+    BIWHITE='\e[1;97m'
+    if [ -z "${1}" ]; then
+        HOSTCOLOR=$(tput setaf 221)
+    else
+        HOSTCOLOR=$(tput setaf $1)
+    fi
+
+    if [[ `whoami` = "root" ]]; then
+        USERCOLOR='\e[48;5;160m'
+    else
+        USERCOLOR=$(tput setaf 38)
+    fi
+
+    GROUPCOLOR=$(tput setaf 119)
+    PWDCOLOR=$(tput setaf 11)
+    ATCOLOR=$BIWHITE
+
+    export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\[$ATCOLOR\]@\[$HOSTCOLOR\]\h \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    export PS2="\[$ORANGE\]→ \[$RESET\]"
+}
