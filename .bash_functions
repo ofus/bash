@@ -190,6 +190,10 @@ function aqg() {
     apt-cache search $aq | grep -i --color $aq
 }
 
+function show_installed() {
+    grep Install /var/log/apt/history.log | sed 's/Install: //g' | sed 's/:amd64//g' | sed 's/(/[/g' | sed 's/)/]/g' | sed -e 's/\[[^][]*\]//g' | sed 's/ , /\n/g'
+}
+
 function aiv() {
     if [ -z "${1}" ]; then
         echo "E: You must give at least one search pattern"
@@ -330,5 +334,5 @@ function noblanklines() {
 }   
 
 function 256colors() {
-     for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
+    for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
 }
