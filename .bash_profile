@@ -28,6 +28,7 @@ done
 # Add tab completion for `defaults read|write NSGlobalDomain`
 # You could just use `-g` instead, but I like being explicit
 #complete -W "NSGlobalDomain" defaults
+umask 0002
 
 # enable color support of ls and also add handy bash_aliases
 if [ -x /usr/bin/dircolors ]; then
