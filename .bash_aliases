@@ -53,3 +53,5 @@ alias composer="composer --ansi"
 alias xmlto='xmlto --skip-validation'
 alias ll='ls -al'
 alias grm='git branch -D'
+
+alias artisan="php artisan --ansi"
