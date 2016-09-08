@@ -170,6 +170,9 @@ function parse_git_branch() {
 }
 
 function show_group_not_default() {
+    if [ ! -f /etc/group ]; then
+        return
+    fi
     local u=$(whoami)
     local curgrp=$(id -gn)
     local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut -d: -f4):" /etc/group |  cut -d: -f1)
@@ -274,7 +277,7 @@ function psgrep() {
 }
 
 function parse_svn_dirty() {
- [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo "*"
+ [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo -n "*"
 }
 
 function svn_test() {
@@ -355,6 +358,35 @@ function set_prompt() {
     PWDCOLOR=$(tput setaf 11)
     ATCOLOR=$BIWHITE
 
-    export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\[$ATCOLOR\]@\[$HOSTCOLOR\]\h \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\h \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
     export PS2="\[$ORANGE\]→ \[$RESET\]"
+}
+
+# Determine the branch information for this subversion repository. No support
+# for svn status, since that needs to hit the remote repository.
+function set_svn_branch {
+  if [ -d ".svn" ]; then
+
+        # Capture the output of the "git status" command.
+        svn_info="$(svn info | egrep '^URL: ' 2> /dev/null)"
+
+        # Get the name of the branch.
+        branch_pattern="^URL: .*/(branches|tags)/([^/]+)"
+        trunk_pattern="^URL: .*/trunk(/.*)?$"
+        if [[ ${svn_info} =~ $branch_pattern ]]; then
+        branch=${BASH_REMATCH[2]}
+        elif [[ ${svn_info} =~ $trunk_pattern ]]; then
+        branch='trunk'
+        fi
+
+        # Set the final branch string.
+        BRANCH="(${branch}) "
+    else
+        BRANCH=""
+    fi
+}
+
+function get_svn_branch {
+    set_svn_branch
+    echo -n "$BRANCH"
 }
