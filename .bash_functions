@@ -162,7 +162,7 @@ function parse_bzr_changes() {
 }
 
 function parse_git_dirty() {
-    [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
+    [[ $(git status 2> /dev/null | tail -n1) != *"working "*" clean"* ]] && echo "*"
 }
 
 function parse_git_branch() {
