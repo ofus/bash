@@ -29,3 +29,6 @@ export LESS_TERMCAP_ue=$'\E[0m'			# end underline
 export MANPAGER="less -X"
 
 export BZR_LOG="/dev/null"
+
+GPG_TTY=$(tty)
+export GPG_TTY
