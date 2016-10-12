@@ -357,6 +357,7 @@ function set_prompt() {
     GROUPCOLOR=$(tput setaf 119)
     PWDCOLOR=$(tput setaf 11)
     ATCOLOR=$BIWHITE
+    RESET=$(tput sgr0)
 
     export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\h \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
     export PS2="\[$ORANGE\]→ \[$RESET\]"
