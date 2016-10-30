@@ -55,3 +55,4 @@ alias ll='ls -al'
 alias grm='git branch -D'
 
 alias artisan="php artisan --ansi"
+alias now="date +%Y%m%d%H%M%S"
