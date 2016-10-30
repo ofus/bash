@@ -13,7 +13,7 @@ for FILE in $(find . -name \.\* -type f  -print | sed 's/.\///g'); do
 			read -p "$OLDFILE exists. Overwrite this file? " -n 1 -r
 			echo
 			if [[ $REPLY =~ ^[Yy]$ ]]; then
-				mv $OLDFILE $OLDDIR/$OLDFILE.bak.$(date +%Y%m%d%H%M%S)
+				mv $OLDFILE $OLDDIR/$FILE.bak.$(date +%Y%m%d%H%M%S)
 				cp $FILENAME $OLDFILE
 				echo Updated $FILE
 			fi
