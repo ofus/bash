@@ -38,3 +38,19 @@ set convert-meta off
 
 # Use Alt/Meta + Delete to delete the preceding word
 "\e[3;3~": kill-word
+
+# ctrl + left/right
+"\e[1;5C": forward-word   # ctrl + right
+"\e[1;5D": backward-word  # ctrl + left
+
+# Home Key
+"\e[1~":beginning-of-line
+
+# End Key
+"\e[4~":end-of-line
+
+# Delete Key
+#"\e[3~":delete-char
+
+# Insert Key
+#"\e[2~":paste-from-clipboard
