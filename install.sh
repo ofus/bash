@@ -1,5 +1,8 @@
 #!/bin/bash
 
+OLDDIR=$HOME/.oldbash~
+mkdir -p $OLDDIR
+
 for FILE in $(find . -name \.\* -type f  -print | sed 's/.\///g'); do
 	OLDFILE=$HOME/$FILE
 	OLDSIZE=$(ls -lA $OLDFILE 2> /dev/null | cut -f5 -d' ')
@@ -10,8 +13,7 @@ for FILE in $(find . -name \.\* -type f  -print | sed 's/.\///g'); do
 			read -p "$OLDFILE exists. Overwrite this file? " -n 1 -r
 			echo
 			if [[ $REPLY =~ ^[Yy]$ ]]; then
-				mv $OLDFILE $OLDFILE.bak.$(date +%Y%m%d%H%M%S)
-				# ln -s $FILENAME $OLDFILE
+				mv $OLDFILE $OLDDIR/$OLDFILE.bak.$(date +%Y%m%d%H%M%S)
 				cp $FILENAME $OLDFILE
 				echo Updated $FILE
 			fi
