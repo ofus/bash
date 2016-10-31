@@ -11,13 +11,15 @@ TERM=xterm-256color
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
-# * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,bash_functions,exports,bash_aliases,extra}; do
+for file in ~/.{path,bash_functions,exports,bash_aliases}; do
 	[ -r "$file" ] && source "$file"
 done
 unset file
 
 set_prompt
+
+# * ~/.extra can be used for other settings you don’t want to commit.
+[  -r "~/.extra" ] && source "~/.extra"
 
 # Enable some Bash 4 features when possible:
 for option in histappend checkwinsize autocd globstar; do
