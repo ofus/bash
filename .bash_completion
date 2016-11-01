@@ -102,6 +102,17 @@ _CQN()
 }
 complete -F _CQN cqn
 
+_DROPBOX()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+    local cterm
+    cterm="status throttle help puburl stop running start filestatus ls autostart exclude lansync sharelink proxy"
+    COMPREPLY=( $(compgen -W "$cterm" -- "$cur" ) )
+    return 0
+}
+complete -F _DROPBOX dropbox
+
 _VAGRANT()
 {
     local cur
