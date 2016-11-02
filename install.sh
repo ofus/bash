@@ -27,3 +27,5 @@ for FILE in $(find . -name \.\* -type f  -print | sed 's/.\///g'); do
 		fi
 	fi
 done
+
+source ~/.bashrc
