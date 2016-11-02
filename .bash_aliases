@@ -57,3 +57,4 @@ alias grm='git branch -D'
 alias artisan="php artisan --ansi"
 alias now="date +%Y%m%d%H%M%S"
 alias entropy="cat /proc/sys/kernel/random/entropy_avail"
+alias youtube-m4a="youtube-dl -f 140"
