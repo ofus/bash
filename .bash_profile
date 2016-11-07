@@ -22,7 +22,7 @@ set_prompt
 [  -r "~/.extra" ] && source "~/.extra"
 
 # Flush Bash_history After Each Command (useful for tmux, screen, etc)
-export PROMPT_COMMAND='history -a'
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
 
 # Enable some Bash 4 features when possible:
 for option in histappend checkwinsize autocd globstar; do
