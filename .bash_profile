@@ -21,6 +21,9 @@ set_prompt
 # * ~/.extra can be used for other settings you don’t want to commit.
 [  -r "~/.extra" ] && source "~/.extra"
 
+# Flush Bash_history After Each Command (useful for tmux, screen, etc)
+export PROMPT_COMMAND='history -a'
+
 # Enable some Bash 4 features when possible:
 for option in histappend checkwinsize autocd globstar; do
 	shopt -s "$option" 2> /dev/null
