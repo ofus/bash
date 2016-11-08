@@ -11,26 +11,31 @@ TERM=xterm-256color
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
-for file in ~/.{path,bash_functions,exports,bash_aliases}; do
+for file in $HOME/.{path,bash_functions,exports,bash_aliases}; do
 	[ -r "$file" ] && source "$file"
 done
 unset file
 
 set_prompt
 
-# * ~/.extra can be used for other settings you don’t want to commit.
-[  -r "~/.extra" ] && source "~/.extra"
-
-# Flush Bash_history After Each Command (useful for tmux, screen, etc)
-export PROMPT_COMMAND='history -a'
+# * $HOME/.extra can be used for other settings you don’t want to commit.
+[  -r "$HOME/.extra" ] && source "$HOME/.extra"
 
 # Enable some Bash 4 features when possible:
 for option in histappend checkwinsize autocd globstar; do
 	shopt -s "$option" 2> /dev/null
 done
 
+# Flush Bash_history After Each Command (useful for tmux, screen, etc)
+#export PROMPT_COMMAND='history -a'
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
+# Enable some Bash 4 features when possible:
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 #[ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
+# Flush Bash_history After Each Command (useful for tmux, screen, etc)
+#export PROMPT_COMMAND='history -a'
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
 
 # Add tab completion for `defaults read|write NSGlobalDomain`
 # You could just use `-g` instead, but I like being explicit
