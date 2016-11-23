@@ -256,6 +256,7 @@ function wp() {
 }
 
 function ssl3test() {
+
     if [ -z "${1}" ]; then
         echo "E: You must give a hostname"
         return 1
@@ -378,22 +379,38 @@ function 256colors() {
 }
 
 function set_prompt() {
+    OPTS=`getopt -o u:h:g:p:a: --long user:,host:,group:,pwd:,at: -n 'parse-options' -- "$@"`
+
+    if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+    # echo "$OPTS"
+    eval set -- "$OPTS"
+
     BIWHITE='\e[1;97m'
-    if [ -z "${1}" ]; then
-        HOSTCOLOR=$(tput setaf 221)
-    else
-        HOSTCOLOR=$(tput setaf $1)
-    fi
+    ORANGE=$(tput setaf 172)
 
-    if [[ `whoami` = "root" ]]; then
-        USERCOLOR='\e[48;5;160m'
-    else
-        USERCOLOR=$(tput setaf 38)
-    fi
-
+    HOSTCOLOR=$(tput setaf 221)
+    USERCOLOR=$(tput setaf 38)
     GROUPCOLOR=$(tput setaf 119)
     PWDCOLOR=$(tput setaf 11)
     ATCOLOR=$BIWHITE
+
+    while true; do
+      case "$1" in
+        -u | --user )       USERCOLOR=$(tput setaf $2); shift 2 ;;
+        -h | --host )       HOSTCOLOR=$(tput setaf $2); shift 2 ;;
+        -g | --group )      GROUPCOLOR=$(tput setaf $2); shift 2 ;;
+        -p | --pwd )        PWDCOLOR=$(tput setaf $2); shift 2 ;;
+        -a | --at )         ATCOLOR=$(tput setaf $2); shift 2 ;;
+        -- ) shift; break ;;
+        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>]" 1>&2; exit 1; ;;
+      esac
+    done
+
+    if [[ `whoami` = "root" ]]; then
+        USERCOLOR='\e[48;5;160m'
+    fi
+
     RESET=$(tput sgr0)
 
     export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
