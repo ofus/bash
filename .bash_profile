@@ -22,7 +22,7 @@ set_prompt
 export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
 
 # * ~/.extra can be used for other settings you don’t want to commit.
-[  -r "~/.extra" ] && source "~/.extra"
+[  -r "$HOME/.extra" ] && source "$HOME/.extra"
 
 # Enable some Bash 4 features when possible:
 for option in histappend checkwinsize autocd globstar; do
