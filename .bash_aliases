@@ -57,4 +57,8 @@ alias grm='git branch -D'
 alias now="date +%Y%m%d%H%M%S"
 alias entropy="cat /proc/sys/kernel/random/entropy_avail"
 alias youtube-m4a="youtube-dl -f 140"
-alias nyan='nc -v nyancat.dakko.us 23'
+
+# https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/nyan/nyan.plugin.zsh
+if [[ -x `which nc` ]]; then
+  alias nyan='nc -v nyancat.dakko.us 23' # nyan cat
+fi
