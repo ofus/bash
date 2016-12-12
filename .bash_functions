@@ -16,11 +16,6 @@ function calc() {
     printf "\n"
 }
 
-# Create a new directory and enter it
-function mkd() {
-    mkdir -p "$@" && cd "$@"
-}
-
 # Determine size of a file or total size of a directory
 function fs() {
     if du -b /dev/null > /dev/null 2>&1; then
@@ -306,11 +301,11 @@ function rot13() {
     echo "$foo" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 }
 
-get_sha() {
+function get_sha() {
     git rev-parse --short HEAD 2>/dev/null
 }
 
-get_dir() {
+function get_dir() {
     printf "%s" $(pwd | sed "s:$HOME:~:")
 }
 
