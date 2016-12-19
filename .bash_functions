@@ -451,3 +451,12 @@ function get_svn_branch {
     set_svn_branch
     echo -n "$BRANCH"
 }
+
+# Mimic git diff with color
+function svndiff() {
+    if hash colordiff 2>/dev/null; then
+        svn diff -x -w -r "$1":"$2" "${@:3}" | colordiff
+    else
+        svn diff -x -w -r "$1":"$2" "${@:3}"
+    fi
+}
