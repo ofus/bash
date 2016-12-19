@@ -361,10 +361,21 @@ function 256colors() {
         for fgbg in 38 48 ; do #Foreground/Background
                 for color in {0..256} ; do #Colors
                         #Display the color
-                        echo -en "\e[${fgbg};5;${color}m ${color}\t\e[0m"
+                        if [ $color -lt 10 ]; then
+                            echo -en "\e[${fgbg};5;${color}m ${color}   \e[0m"
+                        elif [ $color -lt 100 ]; then
+                            echo -en "\e[${fgbg};5;${color}m ${color}  \e[0m"
+                        else
+                            echo -en "\e[${fgbg};5;${color}m ${color} \e[0m"
+                        fi
+
                         #Display 10 colors per lines
-                        if [ $((($color + 1) % 10)) == 0 ] ; then
-                                echo #New line
+                        if [ $((($color - 15) % 36)) == 0 ] ; then
+                            echo #New line
+                        # elif [ $color == 15 ]; then
+                        #     echo
+                        elif [ $color == 231 ]; then
+                            echo
                         fi
                 done
                 echo #New line
