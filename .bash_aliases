@@ -33,6 +33,7 @@ alias aq='apt-cache search'
 alias ag='sudo apt-get install'
 alias aup='sudo apt-get update && sudo apt-get upgrade'
 alias aupd='sudo apt-get update'
+alias adup='sudo apt-get dist-upgrade'
 alias aarm='sudo apt-get autoremove'
 alias aun='sudo apt-get remove'
 
