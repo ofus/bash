@@ -261,17 +261,6 @@ function ssl3test() {
     openssl s_client -ssl3 -connect $foo:443
 }
 
-function psgrep() {
-    if [ -z "${1}" ]; then
-        echo "E: You must give at least one search pattern"
-        return 1
-    fi
-
-    local psquery="${1}"
-    ps aux | head -n1
-    ps aux | grep -v 'grep' | grep -i --color $psquery
-}
-
 function parse_svn_dirty() {
  [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo -n "*"
 }
