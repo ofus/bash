@@ -55,7 +55,23 @@ alias sslscan2="nmap --script +ssl-enum-ciphers -p443"
 alias composer="composer --ansi"
 alias xmlto='xmlto --skip-validation'
 alias ll='ls -al'
+
 alias grm='git branch -D'
+
+# add everything that needs to be added based on results of svn status
+alias svnadd="svn st | grep \? | awk '''{print \"svn add \"$2 }''' | bash" 
+
+# show svn status, sans the noise from externals
+alias svnst='svn st --ignore-externals'
+
+# edit svn:externals for the current folder in the editor
+alias svnext='svn pe svn:externals .'
+
+# edit svn:ignore for the current folder in the editor
+alias svnign='svn pe svn:ignore .'
+
+# recursively delete .svn folders from current directory
+alias delsvn="find . -name .svn | xargs rm -rf"
 
 alias now="date +%Y%m%d%H%M%S"
 alias entropy="cat /proc/sys/kernel/random/entropy_avail"
