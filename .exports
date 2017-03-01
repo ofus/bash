@@ -3,8 +3,9 @@ export EDITOR="vim"
 
 export HISTIGNORE="\&:ls:ll:la:cd:fg:bg:exit:clear"   # don't append consecutive duplicates of these
 export HISTCONTROL=ignoreboth       # ingore duplicates and spaces (ignoreboth|ignoredups|ignorespace)
-export HISTSIZE=20000000              # bash history will save N commands
+export HISTSIZE=              # bash history will save N commands
 export HISTFILESIZE=${HISTSIZE}     # bash will remember N commands
+export HISTFILE=~/.bash_eternal_history
 export HISTTIMEFORMAT="[%Y-%m-%d - %H:%M:%S] "
 
 # Prefer US English and use UTF-8
