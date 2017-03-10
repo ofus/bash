@@ -1,12 +1,14 @@
 # Make vim the default editor
-export EDITOR="vim"
+if hash vim 2>/dev/null; then
+    export EDITOR="vim"
+fi
 
-export HISTIGNORE="\&:ls:ll:la:cd:fg:bg:exit:clear"   # don't append consecutive duplicates of these
-export HISTCONTROL=ignoreboth       # ingore duplicates and spaces (ignoreboth|ignoredups|ignorespace)
-export HISTSIZE=              # bash history will save N commands
-export HISTFILESIZE=${HISTSIZE}     # bash will remember N commands
-export HISTFILE=~/.bash_eternal_history
+export HISTIGNORE="\&:pwd:fg:bg:exit:clear"   # don't append consecutive duplicates of these
+export HISTCONTROL=ignoredups                         # ingore duplicates and spaces (ignoreboth|ignoredups|ignorespace)
+export HISTSIZE=                                      # bash history will save all commands
+export HISTFILESIZE=                                  # unlimited size
 export HISTTIMEFORMAT="[%Y-%m-%d - %H:%M:%S] "
+export HISTFILE=~/.bash_eternal_history
 
 # Prefer US English and use UTF-8
 export LANG="en_US"
