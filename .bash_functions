@@ -452,10 +452,6 @@ function svndiff() {
 
 function speakfile() {
     FILENAME="$1"
-    if ! hash espeak 2>/dev/null; then
-        echo "espeak not found"
-        exit 1
-    fi
     if [ -z "${1}" ]; then
         echo "E: You must give at least one search pattern"
         return 1
@@ -465,6 +461,13 @@ function speakfile() {
         echo "File not found"
         return 1
     fi
-    cat "$FILENAME" | espeak
+    if hash espeak 2>/dev/null; then
+        cat "$FILENAME" | festival --tts
+    elif hash festival 2>/dev/null; then
+        cat "$FILENAME" | espeak
+    else
+        echo "please install either espeak or festival"
+        exit 1
+    fi
 }
 
