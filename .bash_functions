@@ -449,3 +449,22 @@ function svndiff() {
         svn diff -x -w -r "$1":"$2" "${@:3}"
     fi
 }
+
+function speakfile() {
+    FILENAME="$1"
+    if ! hash espeak 2>/dev/null; then
+        echo "espeak not found"
+        exit 1
+    fi
+    if [ -z "${1}" ]; then
+        echo "E: You must give at least one search pattern"
+        return 1
+    fi
+    local FILENAME="${1}"
+    if [ ! -f "$FILENAME" ]; then
+        echo "File not found"
+        return 1
+    fi
+    cat "$FILENAME" | espeak
+}
+
