@@ -186,7 +186,7 @@ function aqg() {
     local aq="${1}"
     #apt-cache search $aq | grep -v lib | grep -i --color $aq
     # apt-cache search $aq | grep -i --color $aq
-    apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | grep -i --color $aq
+    apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $aq
 }
 
 function show_installed() {
