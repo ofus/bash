@@ -478,6 +478,5 @@ function fingerprintCert() {
         echo "File not found"
         return 1
     fi
-    #echo "$(openssl x509 -in $FILENAME -noout -fingerprint | sed -e 's/[[:space:]]*$//') $(openssl x509 -in $FILENAME -noout -text | grep DNS | sed -e 's/^[[:space:]]*//')"
-    echo "$(openssl x509 -in $FILE -noout -fingerprint | sed -e 's/[[:space:]]*$//') $(openssl x509 -in $FILE -noout -subject | sed 's/subject= \///g' | sed -e 's/^[[:space:]]*//') $(openssl x509 -in $FILE -noout -text | grep DNS | sed -e 's/^[[:space:]]*//')"
+    echo "$(openssl x509 -in $FILENAME -noout -fingerprint | sed -e 's/[[:space:]]*$//') $(openssl x509 -in $FILENAME -noout -subject | sed 's/subject= \///g' | sed -e 's/^[[:space:]]*//') $(openssl x509 -in $FILENAME -noout -text | grep DNS | sed -e 's/^[[:space:]]*//')"
 }
