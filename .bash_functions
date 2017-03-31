@@ -465,7 +465,7 @@ function speakfile() {
     if hash espeak 2>/dev/null; then
         cat "$FILENAME" | festival --tts
     elif hash festival 2>/dev/null; then
-        cat "$FILENAME" | espeak
+        espeak -f "$FILENAME"
     else
         echo "please install either espeak or festival"
         exit 1
