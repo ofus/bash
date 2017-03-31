@@ -185,7 +185,8 @@ function aqg() {
 
     local aq="${1}"
     #apt-cache search $aq | grep -v lib | grep -i --color $aq
-    apt-cache search $aq | grep -i --color $aq
+    # apt-cache search $aq | grep -i --color $aq
+    apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $aq
 }
 
 function show_installed() {
@@ -221,7 +222,7 @@ function cq() {
 
     local foo="${@}"
     local cipherquery=$(echo $foo 2>/dev/null| sed 's/\ /\:/g' )
-    local bar="$cipherquery:!eNULL:!aNULL:!ADH:!EXP:!PSK:!SRP:!DSS:!ECDSA"
+    local bar="$cipherquery:!eNULL:!aNULL:!ADH:!EXP:!PSK:!SRP:!DSS"
     cqn $bar | grep -v "PSK"
 }
 
@@ -234,7 +235,7 @@ function cqn() {
     local foo="${@}"
     local cipherquery=$(echo $foo 2>/dev/null| sed 's/\ /\:/g' )
     local bar="$cipherquery"
-    openssl ciphers -v "$bar" | column -t | grep -v ECDSA | grep -v "DH-"
+    openssl ciphers -v "$bar" | column -t | grep -v "DH-"
 }
 
 function wp() {
@@ -471,3 +472,11 @@ function speakfile() {
     fi
 }
 
+function fingerprintCert() {
+    local FILENAME="${1}"
+    if [ ! -f "$FILENAME" ]; then
+        echo "File not found"
+        return 1
+    fi
+    echo "$(openssl x509 -in $FILENAME -noout -fingerprint | sed -e 's/[[:space:]]*$//') $(openssl x509 -in $FILENAME -noout -subject | sed 's/subject= \///g' | sed -e 's/^[[:space:]]*//') $(openssl x509 -in $FILENAME -noout -text | grep DNS | sed -e 's/^[[:space:]]*//')"
+}
