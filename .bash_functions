@@ -185,7 +185,8 @@ function aqg() {
 
     local aq="${1}"
     #apt-cache search $aq | grep -v lib | grep -i --color $aq
-    apt-cache search $aq | grep -i --color $aq
+    # apt-cache search $aq | grep -i --color $aq
+    apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | grep -i --color $aq
 }
 
 function show_installed() {
@@ -471,3 +472,12 @@ function speakfile() {
     fi
 }
 
+function fingerprintCert() {
+    local FILENAME="${1}"
+    if [ ! -f "$FILENAME" ]; then
+        echo "File not found"
+        return 1
+    fi
+    #echo "$(openssl x509 -in $FILENAME -noout -fingerprint | sed -e 's/[[:space:]]*$//') $(openssl x509 -in $FILENAME -noout -text | grep DNS | sed -e 's/^[[:space:]]*//')"
+    echo "$(openssl x509 -in $FILE -noout -fingerprint | sed -e 's/[[:space:]]*$//') $(openssl x509 -in $FILE -noout -subject | sed 's/subject= \///g' | sed -e 's/^[[:space:]]*//') $(openssl x509 -in $FILE -noout -text | grep DNS | sed -e 's/^[[:space:]]*//')"
+}
