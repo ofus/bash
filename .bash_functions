@@ -222,7 +222,7 @@ function cq() {
 
     local foo="${@}"
     local cipherquery=$(echo $foo 2>/dev/null| sed 's/\ /\:/g' )
-    local bar="$cipherquery:!eNULL:!aNULL:!ADH:!EXP:!PSK:!SRP:!DSS:!ECDSA"
+    local bar="$cipherquery:!eNULL:!aNULL:!ADH:!EXP:!PSK:!SRP:!DSS"
     cqn $bar | grep -v "PSK"
 }
 
@@ -235,7 +235,7 @@ function cqn() {
     local foo="${@}"
     local cipherquery=$(echo $foo 2>/dev/null| sed 's/\ /\:/g' )
     local bar="$cipherquery"
-    openssl ciphers -v "$bar" | column -t | grep -v ECDSA | grep -v "DH-"
+    openssl ciphers -v "$bar" | column -t | grep -v "DH-"
 }
 
 function wp() {
