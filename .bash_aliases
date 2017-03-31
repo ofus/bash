@@ -77,6 +77,13 @@ alias now="date +%Y%m%d%H%M%S"
 alias entropy="cat /proc/sys/kernel/random/entropy_avail"
 alias youtube-m4a="youtube-dl -f 140"
 
+# Decoding URL encoding (percent encoding)
+# https://unix.stackexchange.com/a/159254
+alias urldecode='python -c "import sys, urllib as ul; \
+    print ul.unquote_plus(sys.argv[1])"'
+alias urlencode='python -c "import sys, urllib as ul; \
+    print ul.quote_plus(sys.argv[1])"'
+
 # https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/nyan/nyan.plugin.zsh
 if [[ -x `which nc` ]]; then
   alias nyan='nc -v nyancat.dakko.us 23' # nyan cat
