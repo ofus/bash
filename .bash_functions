@@ -126,7 +126,7 @@ function getcertnames() {
     echo # newline
 
     local tmp=$(echo -e "GET / HTTP/1.0\nEOT" \
-        | openssl s_client -connect "${domain}:443" 2>&1);
+        | openssl s_client -connect "${domain}:443" -servername "${domain}" 2>&1);
 
     if [[ "${tmp}" = *"-----BEGIN CERTIFICATE-----"* ]]; then
         local certText=$(echo "${tmp}" \
@@ -257,7 +257,9 @@ function tlsscan() {
         return 1
     fi
     local foo="${1}"
-    openssl s_client -connect $foo:443 -servername $foo -showcerts
+    echo -e "GET / HTTP/1.0\nEOT" \
+        | openssl s_client -connect $foo:443 -servername $foo -showcerts
+    # openssl s_client -connect $foo:443 -servername $foo -showcerts
 }
 
 function parse_svn_dirty() {
