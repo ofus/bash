@@ -251,15 +251,13 @@ function wp() {
     wikipedia2text $host | $MANPAGER
 }
 
-function ssl3test() {
-
+function tlsscan() {
     if [ -z "${1}" ]; then
         echo "E: You must give a hostname"
         return 1
     fi
     local foo="${1}"
-    echo "attempting to connect via ssl3 to $foo ..."
-    openssl s_client -ssl3 -connect $foo:443
+    openssl s_client -connect $foo:443 -servername $foo -showcerts
 }
 
 function parse_svn_dirty() {
