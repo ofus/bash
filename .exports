@@ -1,5 +1,7 @@
 # Make vim the default editor
-if hash vim 2>/dev/null; then
+if hash subl 2>/dev/null; then
+    export EDITOR="subl"
+elif hash vim 2>/dev/null; then
     export EDITOR="vim"
 fi
 
