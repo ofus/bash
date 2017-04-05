@@ -28,7 +28,7 @@ alias free='free -m'
 alias openports='sudo netstat -nape --inet'
 alias ns='netstat -alnp --protocol=inet|grep -v CLOSE_WAIT|cut -c-6,21-94|tail'
 alias sysinfo='uname -a && grep MemTotal /proc/meminfo && grep "model name" /proc/cpuinfo && lspci -tv && lsusb -tv && head -n1 /etc/issue'
-alias meminfo="sudo lshw -class memory"
+alias meminfo="sudo dmidecode -t memory && sudo lshw -class memory"
 alias ai='apt-cache show' 
 alias aidl='sudo apt-get install --download-only -y'
 alias aq='apt-cache search'
