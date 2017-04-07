@@ -19,7 +19,7 @@ unset file
 set_prompt
 
 # After each command, append to the history file and reread it
-export PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
+PROMPT_COMMAND="history -n; history -w; history -c; history -r; $PROMPT_COMMAND"
 
 # * ~/.extra can be used for other settings you don’t want to commit.
 [  -r "$HOME/.extra" ] && source "$HOME/.extra"

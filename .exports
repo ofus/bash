@@ -6,7 +6,7 @@ elif hash vim 2>/dev/null; then
 fi
 
 export HISTIGNORE="\&:pwd:fg:bg:exit:clear"   # don't append consecutive duplicates of these
-export HISTCONTROL=ignoredups                         # ingore duplicates and spaces (ignoreboth|ignoredups|ignorespace)
+export HISTCONTROL=ignoredups:erasedups               # ingore duplicates and spaces (ignoreboth|ignoredups|ignorespace)
 export HISTSIZE=                                      # bash history will save all commands
 export HISTFILESIZE=                                  # unlimited size
 export HISTTIMEFORMAT="[%Y-%m-%d - %H:%M:%S] "
