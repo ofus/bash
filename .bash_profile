@@ -1,13 +1,17 @@
 # Add `~/bin` to the `$PATH`
 PATH="$HOME/bin:$PATH"
-TERM=xterm-256color
-# if [ "$COLORTERM" == "gnome-terminal" ] || [ "$COLORTERM" == "xfce4-terminal" ]
-# then
-    # TERM=xterm-256color
-    # elif [ "$COLORTERM" == "rxvt-xpm" ]
-    # then
-        # TERM=rxvt-256color
-# fi
+
+if [ ]
+# TERM=xterm-256color
+if [ ! "$TERM" == "gnome-terminal" ] && [ "$COLORTERM" == "xfce4-terminal" ] && [ ! "$TERM" == *256color ]; then
+    if [ -n "$TMUX" ]; then
+        TERM=tmux-256color
+    elif [ -n "$STY" ]; then
+        TERM=screen-256color
+    else
+        TERM=xterm-256color
+    fi
+fi
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
