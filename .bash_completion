@@ -68,18 +68,6 @@ _PSQ()
 }
 complete -F _PSQ psgrep
 
-_CSCAN()
-{
-    #~/.cipherscan/hosts.log
-    local cur
-    cur=${COMP_WORDS[COMP_CWORD]}
-    hosts=$( cat $HOME/.cipherscan/hosts.log | grep "\." | sed ':a;N;$!ba;s/\n/\ /g' )
-    COMPREPLY=( $(compgen -W "$hosts" -- "$cur" ) )
-    return 0
-}
-complete -F _CSCAN cs
-complete -F _CSCAN cipherscan
-
 _CQ()
 {
     local cur
@@ -219,3 +207,59 @@ function _composercomplete {
     __ltrim_colon_completions "$cur";
 };
 complete -F _composercomplete composer;
+
+_cipherscan()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    case $prev in
+        -o|--openssl|--cafile|--savecrt)
+            _filedir
+            return
+            ;;
+        --capath|--savecrt)
+            _filedir -d
+            return
+            ;;
+        -d|--delay)
+            # expect integer number
+            COMPREPLY+=( $( compgen -P "$cur" -W "{0..9}" ) )
+            compopt -o nospace
+            return
+            ;;
+        -starttls)
+            COMPREPLY=( $( compgen -W 'smtp imap pop3 ftp xmpp' -- "$cur" ) )
+            return
+            ;;
+        -servername|-verify_hostname)
+            _known_hosts_real "$cur"
+            return
+            ;;
+        -verify_ip)
+            _ip_addresses "$cur"
+            return
+            ;;
+    esac
+
+    if [[ $cur == -* ]]; then
+        COMPREPLY=( $( compgen -W '$( _parse_help "$1" ) --cafile' -- "$cur" ) )
+        [[ $COMPREPLY == *= ]] && compopt -o nospace
+        return
+    fi
+
+    # $split && return
+    _known_hosts_real "$cur"
+}
+complete -F _cipherscan cipherscan;
+complete -F _cipherscan cs;
+
+# _CSCAN()
+# {
+#     #~/.cipherscan/hosts.log
+#     local cur
+#     cur=${COMP_WORDS[COMP_CWORD]}
+#     hosts=$( cat $HOME/.cipherscan/hosts.log | grep "\." | sed ':a;N;$!ba;s/\n/\ /g' )
+#     COMPREPLY=( $(compgen -W "$hosts" -- "$cur" ) )
+#     return 0
+# }
