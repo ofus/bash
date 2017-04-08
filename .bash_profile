@@ -1,15 +1,16 @@
 # Add `~/bin` to the `$PATH`
 PATH="$HOME/bin:$PATH"
 
-if [ ]
 # TERM=xterm-256color
-if [ ! "$TERM" == "gnome-terminal" ] && [ "$COLORTERM" == "xfce4-terminal" ] && [ ! "$TERM" == *256color ]; then
-    if [ -n "$TMUX" ]; then
-        TERM=tmux-256color
-    elif [ -n "$STY" ]; then
-        TERM=screen-256color
-    else
-        TERM=xterm-256color
+if [[ ! $TERM == *256color ]]; then
+    if [ ! "$TERM" == "gnome-terminal" ] && [ "$COLORTERM" == "xfce4-terminal" ]; then
+        if [ -n "$TMUX" ]; then
+            TERM=tmux-256color
+        elif [ -n "$STY" ]; then
+            TERM=screen-256color
+        else
+            TERM=xterm-256color
+        fi
     fi
 fi
 
