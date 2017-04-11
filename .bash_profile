@@ -3,7 +3,7 @@ PATH="$HOME/bin:$PATH"
 
 # TERM=xterm-256color
 if [[ ! $TERM == *256color* ]]; then
-    if [ ! "$TERM" == "gnome-terminal" ] && [ "$TERM" == "xfce4-terminal" ] && [ ]; then
+    if [ ! "$TERM" == "gnome-terminal" ] && [ ! "$TERM" == "xfce4-terminal" ]; then
         if [ -n "$TMUX" ]; then
             TERM=tmux-256color
         elif [ -n "$STY" ]; then
