@@ -76,7 +76,7 @@ alias delsvn="find . -name .svn | xargs rm -rf"
 
 alias now="date +%Y%m%d%H%M%S"
 alias entropy="cat /proc/sys/kernel/random/entropy_avail"
-alias youtube-m4a="youtube-dl -f 140"
+alias m4a="youtube-dl -f 140"
 
 # Decoding URL encoding (percent encoding)
 # https://unix.stackexchange.com/a/159254
