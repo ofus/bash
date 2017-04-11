@@ -2,17 +2,17 @@
 PATH="$HOME/bin:$PATH"
 
 # TERM=xterm-256color
-if [[ ! $TERM == *256color* ]]; then
-    if [ ! "$TERM" == "gnome-terminal" ] && [ ! "$TERM" == "xfce4-terminal" ]; then
-        if [ -n "$TMUX" ]; then
-            TERM=tmux-256color
-        elif [ -n "$STY" ]; then
-            TERM=screen-256color
-        else
-            TERM=xterm-256color
-        fi
-    fi
-fi
+# if [[ ! $TERM == *256color* ]]; then
+#     if [ ! "$TERM" == "gnome-terminal" ] && [ ! "$TERM" == "xfce4-terminal" ]; then
+#         if [ -n "$TMUX" ]; then
+#             TERM=tmux-256color
+#         elif [ -n "$STY" ]; then
+#             TERM=screen-256color
+#         else
+#             TERM=xterm-256color
+#         fi
+#     fi
+# fi
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
