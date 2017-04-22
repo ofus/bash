@@ -175,38 +175,70 @@ _artisan()
 }
 complete -o default -F _artisan artisan 
 
-# source: https://github.com/stecman/composer-bash-completion-plugin
-# 
-# Modified version of what `composer _completion -g -p composer` generates
-# Composer will only load plugins when a valid composer.json is in its working directory,
-# so  for this hack to work, we are always running the completion command in ~/.composer
-function _composercomplete {
-    export COMP_LINE COMP_POINT COMP_WORDBREAKS;
-    local -x COMPOSER_CWD=`pwd`
-    local RESULT STATUS
+# source: https://github.com/iArren/composer-bash-completion
+_composer()
+{
+    local cur prev words cword
+    _init_completion || return
 
-    # Honour the COMPOSER_HOME variable if set
-    local composer_dir=$COMPOSER_HOME
-    if [ -z "$composer_dir" ]; then
-        composer_dir=$HOME/.composer
+    local special i
+    for (( i=0; i < ${#words[@]}-1; i++ )); do
+        if [[ ${words[i]} == @(require) ]]; then
+            special=${words[i]}
+        fi
+    done
+
+    local cache=$HOME/.composer-completion
+    if [[ -n $special ]]; then
+        local packages=$cache/packages.list
+        local providers=$cache/providers.list
+        if [ ! -f $packages -o $( which composer ) -nt $packages ]; then
+            # checking existance of the packages list
+            mkdir -p $cache
+            composer show -a | grep -v '^No composer' >$packages
+            # cut -d '/' -f 1 $packages  | sort | uniq > $providers
+            cat $packages | awk -F "/" '{ print $1 "/" }' | sort | uniq > $providers
+        fi
+        if [[ $prev != $special ]]; then
+            # assume $prev is a package name
+            if [[ $( cat $packages | grep "^$prev" | wc -l ) -gt 0 ]]; then
+                local versions=$cache/packages/$prev/versions
+                if [ ! -f $versions -o $packages -nt $versions ]; then
+                    # checking cache existance
+                    mkdir -p $( dirname $versions )
+                    composer show $prev | \
+                        sed -r -e 's/\x1b\[[0-9]+m//g' | grep ^versions | \
+                        sed -r -e 's/^versions : //' -e 's/, /\n/g' >$versions
+                fi
+                COMPREPLY=( $( cat $versions | grep "^$cur" | sort -u ) )
+            fi
+        fi
+        if [[ -z $COMPREPLY ]]; then
+            # if $prev was not a package
+            COMPREPLY=( $( cat $packages | grep "^$cur" | sort -u ) )
+            # if [[ ! $cur =~ */* ]]; then
+            #     COMPREPLY=( $( cat $providers | grep "^$cur" | sort -u ) )
+            # else
+            #     COMPREPLY=( $( cat $packages | grep "^$cur" | sort -u ) )
+            # fi
+        fi
+        return 0
     fi
 
-    RESULT=`cd $composer_dir && composer depends _completion`;
-    STATUS=$?;
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=( $( compgen -W '-h -q -v -V -n -d \
+            --help --quiet --verbose --version --ansi --no-ansi \
+            --no-interaction --profile --working-dir' -- "$cur" ) )
+    else
+        COMPREPLY=( $( compgen -W 'about archive config create-project \
+            depends diagnose dumpautoload \
+            help init install list require search \
+            selfupdate show status update validate' -- "$cur" ) )
+    fi
 
-    if [ $STATUS -ne 0 ]; then
-        echo $RESULT;
-        return $?;
-    fi;
-
-    local cur;
-    _get_comp_words_by_ref -n : cur;
-
-    COMPREPLY=(`compgen -W "$RESULT" -- $cur`);
-
-    __ltrim_colon_completions "$cur";
-};
-complete -F _composercomplete composer;
+    return 0
+} &&
+complete -F _composer composer
 
 _cipherscan()
 {

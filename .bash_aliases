@@ -40,6 +40,11 @@ alias adup='sudo apt-get dist-upgrade'
 alias aarm='sudo apt-get autoremove'
 alias aun='sudo apt-get remove'
 
+alias pg='sudo pacman -S'
+alias pq='sudo pacman -Ss'
+alias pup='sudo pacman -Syu'
+
+
 ## COLORS ##
 alias ls='ls --color=auto --ignore-backups --time-style="+%x %X"'
 alias dir='dir --color=auto'
