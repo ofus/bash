@@ -8,16 +8,6 @@ _AI()
 }
 complete -F _AI ai
 
-_AIV()
-{
-    local cur
-    cur=${COMP_WORDS[COMP_CWORD]}
-
-    COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
-    return 0
-}
-complete -F _AIV aiv
-
 _AQ()
 {
     local cur
@@ -56,7 +46,57 @@ _AUN()
     COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} "$cur" 2> /dev/null ) )
     return 0
 }
-complete -F _AQ aun
+complete -F _AUN aun
+
+_PACI()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( pacman -Sl | awk {' print $2 '} | grep "^$cur" 2> /dev/null ) )
+    return 0
+}
+complete -F _PACI paci
+
+_PACQ()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( pacman -Sl | awk {' print $2 '} | grep "^$cur" 2> /dev/null ) )
+    return 0
+}
+complete -F _PACQ pacq
+
+_PACG()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( pacman -Sl | awk {' print $2 '} | grep "^$cur" 2> /dev/null ) )
+    return 0
+}
+complete -F _PACG pacg
+
+_PACQG()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( pacman -Sl | awk {' print $2 '} | grep "^$cur" 2> /dev/null ) )
+    return 0
+}
+complete -F _PACQG pacqg
+
+_PACUN()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( pacman -Q | awk {' print $1 '} | grep "^$cur" 2> /dev/null ) )
+    return 0
+}
+complete -F _PACUN pacun
 
 _PSQ()
 {

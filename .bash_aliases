@@ -39,11 +39,16 @@ alias aupd='sudo apt-get update'
 alias adup='sudo apt-get dist-upgrade'
 alias aarm='sudo apt-get autoremove'
 alias aun='sudo apt-get remove'
+alias alist='dpkg --list | grep ^i'
 
-alias pg='sudo pacman -S'
-alias pq='sudo pacman -Ss'
-alias pup='sudo pacman -Syu'
-
+alias pacg='sudo pacman -S'
+alias pacq='sudo pacman -Ss'
+alias pacup='sudo pacman -Syu'
+alias pacun='sudo pacman -Rs'
+alias pacarm='sudo pacman -Qdtq'
+alias pacdl='sudo pacman -Sw'
+alias paci='pacman -Si'
+alias paclist='pacman -Q'
 
 ## COLORS ##
 alias ls='ls --color=auto --ignore-backups --time-style="+%x %X"'
