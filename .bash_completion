@@ -98,6 +98,24 @@ _PACUN()
 }
 complete -F _PACUN pacun
 
+_PACKAGES()
+{
+   local cur prev words cword
+    _init_completion || return
+
+    case $prev in
+        uninstall|reinstall)
+            COMPREPLY+=( $( compgen -P "$cur" -W "{0..9}" ) )
+            compopt -o nospace
+            return
+            ;;
+    esac
+
+    COMPREPLY=( $( compgen -W 'files install list-all list-installed reinstall search show uninstall upgrade' -- "$cur" ) )
+    return 0
+}
+complete -F _PACKAGES packages
+
 _PSQ()
 {
     local cur
