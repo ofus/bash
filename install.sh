@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 
 OLDDIR=$HOME/.oldbash~
 mkdir -p "$OLDDIR"
