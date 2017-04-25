@@ -103,18 +103,20 @@ _PACKAGES()
    local cur prev words cword
     _init_completion || return
 
-    if (( $COMP_CWORD <= 1 )); then
-        if [[ "$prev" == "uninstall" ]] || [[ "$prev" == "reinstall" ]]; then
-            COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} "$cur" 2> /dev/null ) )
-            return 0
-        elif [[ "$prev" == "install" ]] || [[ "$prev" == "files" ]] || [[ "$prev" == "show" ]]; then
-            COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
-            return 0 
-        fi
+    if (( $COMP_CWORD <= 1)); then
         COMPREPLY=( $( compgen -W 'files install list-all list-installed reinstall search show uninstall upgrade' -- "$cur" ) )
         return 0
+    elif (( $COMP_CWORD >= 2 )); then
+        if [[ ${COMP_WORDS[1]} == uninstall ]] || [[ ${COMP_WORDS[1]} == reinstall ]]; then
+            COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} "$cur" 2> /dev/null ) )
+        elif [[ ${COMP_WORDS[1]} == install ]] || [[ ${COMP_WORDS[1]} == files ]] || [[ ${COMP_WORDS[1]} == show ]]; then
+            COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
+        fi
+        return 0 
     fi
-    COMPREPLY="COMP_CWORD_$COMP_CWORD"
+    WORD1=${COMP_WORDS[1]}
+    COMPREPLY="WORD1=${COMP_WORDS[1]}_CWORD_$COMP_CWORD"
+    return 0
 }
 complete -F _PACKAGES packages
 
