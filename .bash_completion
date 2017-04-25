@@ -114,9 +114,6 @@ _PACKAGES()
         fi
         return 0 
     fi
-    WORD1=${COMP_WORDS[1]}
-    COMPREPLY="WORD1=${COMP_WORDS[1]}_CWORD_$COMP_CWORD"
-    return 0
 }
 complete -F _PACKAGES packages
 
