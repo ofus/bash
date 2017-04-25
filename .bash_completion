@@ -105,8 +105,11 @@ _PACKAGES()
 
     case $prev in
         uninstall|reinstall)
-            COMPREPLY+=( $( compgen -P "$cur" -W "{0..9}" ) )
-            compopt -o nospace
+            COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} "$cur" 2> /dev/null ) )
+            return
+            ;;
+        files|install|show)
+            COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
             return
             ;;
     esac
