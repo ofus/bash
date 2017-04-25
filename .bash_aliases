@@ -1,4 +1,5 @@
-alias profileme="history | cut -f 2- -d \"]\" | awk 'BEGIN{FS=\"|\"}{print \$1}' | sort | uniq -c | sort -n | tail -n 20 | sort -nr"
+alias profileme="history | cut -f 2- -d 
+\"]\" | awk 'BEGIN{FS=\"|\"}{print \$1}' | sort | uniq -c | sort -n | tail -n 20 | sort -nr"
 alias IPAddress="ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print \$2}' | cut -f1  -d'/'"
 alias df="df"
 alias cp="cp -i"
@@ -24,7 +25,7 @@ alias wru="dpkg -L"
 alias j='jobs'
 alias jl='jobs -l'
 alias free='free -m'
-alias openports='sudo netstat -nape --inet'
+alias openports='netstat -nape --inet'
 alias ns='netstat -alnp --protocol=inet|grep -v CLOSE_WAIT|cut -c-6,21-94|tail'
 alias sysinfo='uname -a && grep MemTotal /proc/meminfo && grep "model name" /proc/cpuinfo && lspci -tv && lsusb -tv && head -n1 /etc/issue'
 alias meminfo="sudo dmidecode -t memory && sudo lshw -class memory"
