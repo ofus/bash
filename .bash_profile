@@ -17,7 +17,7 @@ PATH="$HOME/bin:$PATH"
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 for file in ~/.{path,bash_functions,exports,bash_aliases}; do
-	[ -r "$file" ] && source "$file"
+    [ -r "$file" ] && source "$file"
 done
 unset file
 
@@ -31,7 +31,7 @@ PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; h
 
 # Enable some Bash 4 features when possible:
 for option in histappend checkwinsize autocd globstar; do
-	shopt -s "$option" 2> /dev/null
+    shopt -s "$option" 2> /dev/null
 done
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
@@ -52,18 +52,19 @@ fi
 # Check for recent enough version of bash.
 bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
 if [ $bmajor -gt 3 ] || [ $bmajor -eq 3 -a $bminor -ge 2 ]; then
-	if ! shopt -oq posix; then
-	    if shopt -q progcomp && [ -r /usr/local/Cellar/bash-completion/1.3/etc/bash_completion ]; then
-	        . /usr/local/Cellar/bash-completion/1.3/etc/bash_completion
-		elif [ -f /usr/local/share/bash-completion/bash_completion ]; then
-	        . /usr/local/share/bash-completion/bash_completion
-	    elif [ -f /usr/share/bash-completion/bash_completion ]; then
-	        . /usr/share/bash-completion/bash_completion
-	    elif [ -f /etc/bash_completion ]; then
-	        . /etc/bash_completion
-	    fi
-	fi
-	#[ -r "~/.bash_completion" ] && source "~/.bash_completion"
+    if ! shopt -oq posix; then
+        if shopt -q progcomp && [ -r /usr/local/Cellar/bash-completion/1.3/etc/bash_completion ]; then
+            . /usr/local/Cellar/bash-completion/1.3/etc/bash_completion
+        elif [ -f /usr/local/share/bash-completion/bash_completion ]; then
+            . /usr/local/share/bash-completion/bash_completion
+        elif [ -f /usr/share/bash-completion/bash_completion ]; then
+            . /usr/share/bash-completion/bash_completion
+        elif [ -f ~/usr/share/bash-completion/bash_completion ]; then
+            . ~/usr/share/bash-completion/bash_completion
+        elif [ -f /etc/bash_completion ]; then
+            . /etc/bash_completion
+        fi
+    fi
 fi
 unset bash bmajor bminor
 [ -r "~/.bash_completion" ] && source "~/.bash_completion"
