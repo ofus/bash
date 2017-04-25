@@ -480,3 +480,24 @@ function fingerprintCert() {
     fi
     echo "$(openssl x509 -in $FILENAME -noout -fingerprint | sed -e 's/[[:space:]]*$//') $(openssl x509 -in $FILENAME -noout -subject | sed 's/subject= \///g' | sed -e 's/^[[:space:]]*//') $(openssl x509 -in $FILENAME -noout -text | grep DNS | sed -e 's/^[[:space:]]*//')"
 }
+
+function doihave() {
+    if hash dpkg 2>/dev/null; then
+        dpkg --get-selections \
+        | grep -v deinstall \
+        | awk {' print \$1 '} \
+        | grep "${@}"
+        return 0
+    elif hash pacman 2>/dev/null; then
+        pacman -Q \
+        | awk {' print $1 '} \
+        | grep "${@}"
+        return 0
+    elif hash apt-cyg 2>/dev/null; then
+        apt-cyg list \
+        | grep "${@}"
+        return 0
+    fi
+    echo "error: not implemented for your operating system"
+    return 1
+}

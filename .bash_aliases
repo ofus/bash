@@ -20,7 +20,6 @@ alias ............="cd ../../../../../../../../../../.."
 alias .............="cd ../../../../../../../../../../../.."
 alias ..............="cd ../../../../../../../../../../../../.."
 
-alias doihave="dpkg --get-selections | grep -v deinstall | awk {' print \$1 '} | grep"
 alias wru="dpkg -L"
 alias j='jobs'
 alias jl='jobs -l'
