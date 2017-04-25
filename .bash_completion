@@ -103,16 +103,13 @@ _PACKAGES()
    local cur prev words cword
     _init_completion || return
 
-    case $prev in
-        uninstall|reinstall)
-            COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} "$cur" 2> /dev/null ) )
-            return
-            ;;
-        files|install|show)
-            COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
-            return
-            ;;
-    esac
+    if [[ "$prev" == "uninstall" ]] || [[ "$prev" == "reinstall" ]]; then
+        COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} "$cur" 2> /dev/null ) )
+        return 0
+    elif [[ "$prev" == "install" ]] || [[ "$prev" == "files" ]] || [[ "$prev" == "show" ]]; then
+        COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
+        return 0 
+    fi
 
     COMPREPLY=( $( compgen -W 'files install list-all list-installed reinstall search show uninstall upgrade' -- "$cur" ) )
     return 0
