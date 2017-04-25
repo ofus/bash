@@ -50,7 +50,7 @@ alias paci='pacman -Si'
 alias paclist='pacman -Q'
 
 ## COLORS ##
-alias ls='ls --color=auto'
+alias ls='ls --color=auto --ignore-backups --time-style="+%x %X"'
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
 alias grep='grep --color=auto'
