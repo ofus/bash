@@ -493,7 +493,7 @@ function doihave() {
     if hash dpkg 2>/dev/null; then
         dpkg --get-selections \
         | grep -v deinstall \
-        | awk {' print \$1 '} \
+        | awk {' print $1 '} \
         | grep "${@}"
         return 0
     elif hash pacman 2>/dev/null; then
