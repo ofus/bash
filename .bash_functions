@@ -184,9 +184,17 @@ function aqg() {
     fi
 
     local aq="${1}"
-    #apt-cache search $aq | grep -v lib | grep -i --color $aq
-    # apt-cache search $aq | grep -i --color $aq
     apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $aq
+}
+
+function pacqg() {
+    if [ -z "${1}" ]; then
+        echo "E: You must give at least one search pattern"
+        return 1
+    fi
+
+    local pacq="${1}"
+    pacman -Ss $pacq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $pacq
 }
 
 function show_installed() {
