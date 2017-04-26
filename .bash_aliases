@@ -1,5 +1,4 @@
-alias profileme="history | cut -f 2- -d 
-\"]\" | awk 'BEGIN{FS=\"|\"}{print \$1}' | sort | uniq -c | sort -n | tail -n 20 | sort -nr"
+alias profileme="history | cut -f 2- -d \"]\" | awk 'BEGIN{FS=\"|\"}{print \$1}' | sort | uniq -c | sort -n | tail -n 20 | sort -nr"
 alias IPAddress="ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print \$2}' | cut -f1  -d'/'"
 alias df="df"
 alias cp="cp -i"
