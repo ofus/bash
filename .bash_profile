@@ -1,3 +1,5 @@
+export ROOT=/data/data/com.termux/files
+
 # Add `~/bin` to the `$PATH`
 PATH="$HOME/bin:$PATH"
 
@@ -42,7 +44,7 @@ done
 #complete -W "NSGlobalDomain" defaults
 
 # enable color support of ls and also add handy bash_aliases
-if [ -x /usr/bin/dircolors ]; then
+if [ -x $ROOT/usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
@@ -53,16 +55,14 @@ fi
 bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
 if [ $bmajor -gt 3 ] || [ $bmajor -eq 3 -a $bminor -ge 2 ]; then
     if ! shopt -oq posix; then
-        if shopt -q progcomp && [ -r /usr/local/Cellar/bash-completion/1.3/etc/bash_completion ]; then
-            . /usr/local/Cellar/bash-completion/1.3/etc/bash_completion
-        elif [ -f /usr/local/share/bash-completion/bash_completion ]; then
-            . /usr/local/share/bash-completion/bash_completion
-        elif [ -f /usr/share/bash-completion/bash_completion ]; then
-            . /usr/share/bash-completion/bash_completion
+        if [ -f $ROOT/usr/local/share/bash-completion/bash_completion ]; then
+            . $ROOT/usr/local/share/bash-completion/bash_completion
+        elif [ -f $ROOT/usr/share/bash-completion/bash_completion ]; then
+            . $ROOT/usr/share/bash-completion/bash_completion
         elif [ -f ~/usr/share/bash-completion/bash_completion ]; then
             . ~/usr/share/bash-completion/bash_completion
-        elif [ -f /etc/bash_completion ]; then
-            . /etc/bash_completion
+        elif [ -f $ROOT/etc/bash_completion.d ]; then
+            . $ROOT/etc/bash_completion.d
         fi
     fi
 fi
