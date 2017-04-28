@@ -1,4 +1,4 @@
-_AI()
+function _AI()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -8,7 +8,7 @@ _AI()
 }
 complete -F _AI ai
 
-_AQ()
+function _AQ()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -18,7 +18,7 @@ _AQ()
 }
 complete -F _AQ aq
 
-_AG()
+function _AG()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -28,7 +28,7 @@ _AG()
 }
 complete -F _AG ag
 
-_AQG()
+function _AQG()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -38,7 +38,7 @@ _AQG()
 }
 complete -F _AQ aqg
 
-_AUN()
+function _AUN()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -48,7 +48,7 @@ _AUN()
 }
 complete -F _AUN aun
 
-_PACI()
+function _PACI()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -58,7 +58,7 @@ _PACI()
 }
 complete -F _PACI paci
 
-_PACQ()
+function _PACQ()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -68,7 +68,7 @@ _PACQ()
 }
 complete -F _PACQ pacq
 
-_PACG()
+function _PACG()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -78,7 +78,7 @@ _PACG()
 }
 complete -F _PACG pacg
 
-_PACQG()
+function _PACQG()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -88,7 +88,7 @@ _PACQG()
 }
 complete -F _PACQG pacqg
 
-_PACUN()
+function _PACUN()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -98,7 +98,7 @@ _PACUN()
 }
 complete -F _PACUN pacun
 
-_PACKAGES()
+function _PACKAGES()
 {
    local cur prev words cword
     _init_completion || return
@@ -117,7 +117,7 @@ _PACKAGES()
 }
 complete -F _PACKAGES packages
 
-_PSQ()
+function _PSQ()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -127,7 +127,7 @@ _PSQ()
 }
 complete -F _PSQ psgrep
 
-_CQ()
+function _CQ()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -138,7 +138,7 @@ _CQ()
 }
 complete -F _CQ cq
 
-_CQN()
+function _CQN()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -149,7 +149,7 @@ _CQN()
 }
 complete -F _CQN cqn
 
-_DROPBOX()
+function _DROPBOX()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -160,7 +160,7 @@ _DROPBOX()
 }
 complete -F _DROPBOX dropbox
 
-_VAGRANT()
+function _VAGRANT()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -172,7 +172,7 @@ _VAGRANT()
 complete -F _VAGRANT vagrant
 
 
-_BITBUCKET()
+function _BITBUCKET()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -184,7 +184,7 @@ _BITBUCKET()
 complete -F _BITBUCKET bitbucket
 complete -F _BITBUCKET bb
 
-_GRM()
+function _GRM()
 {
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -201,7 +201,7 @@ function artisan() {
 }
 
 # source: https://nullifer.io/artisan-bash-autocompletion/
-_artisan()  
+function _artisan()  
 {
 
     local cache commands artisanOutput word
@@ -235,7 +235,7 @@ _artisan()
 complete -o default -F _artisan artisan 
 
 # source: https://github.com/iArren/composer-bash-completion
-_composer()
+function _composer()
 {
     local cur prev words cword
     _init_completion || return
@@ -299,7 +299,7 @@ _composer()
 } &&
 complete -F _composer composer
 
-_cipherscan()
+function _cipherscan()
 {
     local cur prev words cword
     _init_completion || return
@@ -346,7 +346,7 @@ complete -F _cipherscan cipherscan;
 complete -F _cipherscan cs;
 
 # 'vcos ap_output_control ap_output_post_processing vchi_test_init vchi_test_exit pm_set_policy pm_get_status pm_show_stats pm_start_logging pm_stop_logging version commands set_vll_dir set_backlight set_logging get_lcd_info arbiter cache_flush otp_dump test_result codec_enabled get_camera get_mem measure_clock measure_volts scaling_kernel scaling_sharpness get_hvs_asserts get_throttled measure_temp get_config hdmi_ntsc_freqs hdmi_adjust_clock hdmi_status_show hvs_update_fields pwm_speedup force_audio hdmi_stream_channels hdmi_channel_map display_power read_ring_osc memtest dispmanx_list get_rsts schmoo render_bar disk_notify inuse_notify sus_suspend sus_status sus_is_enabled sus_stop_test_thread egl_platform_switch mem_validate mem_oom mem_reloc_stats hdmi_cvt hdmi_timings file vctest_memmap vctest_start vctest_stop vctest_set vctest_get'
-_VCGENCMD
+function _VCGENCMD
 {
    local cur prev words cword cterm
     _init_completion || return
