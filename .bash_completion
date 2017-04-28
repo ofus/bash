@@ -107,9 +107,9 @@ function _PACKAGES()
         COMPREPLY=( $( compgen -W 'files install list-all list-installed reinstall search show uninstall upgrade' -- "$cur" ) )
         return 0
     elif (( $COMP_CWORD >= 2 )); then
-        if [[ ${COMP_WORDS[1]} == uninstall ]] || [[ ${COMP_WORDS[1]} == reinstall ]] || [[ ${COMP_WORDS[1]} == files ]]; then
+        if [[ ${COMP_WORDS[1]} == uninstall ]] || [[ ${COMP_WORDS[1]} == reinstall ]] || [[ ${COMP_WORDS[1]} == upgrade ]] || [[ ${COMP_WORDS[1]} == files ]]; then
             COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} | grep "^$cur" 2> /dev/null ) )
-        elif [[ ${COMP_WORDS[1]} == install ]] || [[ ${COMP_WORDS[1]} == show ]]; then
+        elif [[ ${COMP_WORDS[1]} == install ]] || [[ ${COMP_WORDS[1]} == search ]] || [[ ${COMP_WORDS[1]} == show ]]; then
             COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
         fi
         return 0 
