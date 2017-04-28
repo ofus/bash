@@ -13,7 +13,7 @@ export HISTTIMEFORMAT="[%Y-%m-%d - %H:%M:%S] "
 export HISTFILE=~/.bash_eternal_history
 
 # Prefer US English and use UTF-8
-export LANG="en_US"
+export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
 ##### Reference: http://www.matrix44.net/blog/?p=870 ######
