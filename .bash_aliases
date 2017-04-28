@@ -48,6 +48,7 @@ alias pacarm='sudo pacman -Qdtq'
 alias pacdl='sudo pacman -Sw'
 alias paci='pacman -Si'
 alias paclist='pacman -Q'
+alias pp="packages"
 
 ## COLORS ##
 alias ls='ls --color=auto --ignore-backups --time-style="+%x %X"'
