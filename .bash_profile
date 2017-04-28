@@ -55,14 +55,16 @@ fi
 bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
 if [ $bmajor -gt 3 ] || [ $bmajor -eq 3 -a $bminor -ge 2 ]; then
     if ! shopt -oq posix; then
-        if [ -f $ROOT/usr/local/share/bash-completion/bash_completion ]; then
+        if [ -f /data/data/com.termux/files/usr/share/bash-completion/bash_completion ]; then
+            . /data/data/com.termux/files/usr/share/bash-completion/bash_completion
+        elif [ -f $ROOT/usr/local/share/bash-completion/bash_completion ]; then
             . $ROOT/usr/local/share/bash-completion/bash_completion
         elif [ -f $ROOT/usr/share/bash-completion/bash_completion ]; then
             . $ROOT/usr/share/bash-completion/bash_completion
         elif [ -f ~/usr/share/bash-completion/bash_completion ]; then
             . ~/usr/share/bash-completion/bash_completion
-        elif [ -f $ROOT/etc/bash_completion.d ]; then
-            . $ROOT/etc/bash_completion.d
+        elif [ -f $ROOT/etc/bash_completion ]; then
+            . $ROOT/etc/bash_completion
         fi
     fi
 fi
