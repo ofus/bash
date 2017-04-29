@@ -320,7 +320,7 @@ function nolines() {
 
 function noblanklines() {
     sed '/^$/d'
-}   
+}
 
 function 256colors() {
     local arg="${1}"
@@ -509,4 +509,8 @@ function doihave() {
     fi
     echo "error: not implemented for your operating system"
     return 1
+}
+
+function sshd_check() {
+    [[ $( ps -C sshd -o pid= 2>/dev/null | wc -l) > 1 ]] || sshd
 }
