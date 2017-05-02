@@ -32,7 +32,7 @@ PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; h
 [  -r "$HOME/.extra" ] && source "$HOME/.extra"
 
 # Enable some Bash 4 features when possible:
-for option in histappend checkwinsize autocd globstar; do
+for option in histappend checkwinsize autocd globstar direxpand; do
     shopt -s "$option" 2> /dev/null
 done
 
