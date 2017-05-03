@@ -189,6 +189,17 @@ function aqg() {
     apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $aq
 }
 
+function pqg() {
+    if [ -z "${1}" ]; then
+        echo "E: You must give at least one search pattern"
+        return 1
+    fi
+
+    local aq="${1}"
+    packages list-all | sed 's/\//\t/g' | awk {' print $1 '} | sort | grep -i --color $aq
+}
+
+
 function show_installed() {
     grep Install /var/log/apt/history.log | sed 's/Install: //g' | sed 's/:amd64//g' | sed 's/(/[/g' | sed 's/)/]/g' | sed -e 's/\[[^][]*\]//g' | sed 's/ , /\n/g'
 }
