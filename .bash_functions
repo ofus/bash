@@ -196,7 +196,7 @@ function pqg() {
     fi
 
     local aq="${1}"
-    packages list-all | sed 's/\//\t/g' | awk {' print $1 '} | sort | grep -i --color $aq
+    packages list-all 2>/dev/null | sed 's/\//\t/g' | awk {' print $1 '} | sort | grep -i --color $aq
 }
 
 
