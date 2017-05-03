@@ -124,9 +124,9 @@ function _PQ()
     _init_completion || return
     COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
 }
-complete -F _PACKAGES pq
-complete -F _PACKAGES pi
-complete -F _PACKAGES pg
+complete -F _PQ pq
+complete -F _PQ pi
+complete -F _PQ pg
 
 function _PSQ()
 {
