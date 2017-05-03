@@ -118,6 +118,16 @@ function _PACKAGES()
 complete -F _PACKAGES packages
 complete -F _PACKAGES pp
 
+function _PQ()
+{
+   local cur prev words cword
+    _init_completion || return
+    COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
+}
+complete -F _PACKAGES pq
+complete -F _PACKAGES pi
+complete -F _PACKAGES pg
+
 function _PSQ()
 {
     local cur
