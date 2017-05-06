@@ -106,7 +106,7 @@ _APTCYG()
     CACHE_FILENAME="$HOME/.packages.txt"
     
     if [ -f "$CACHE_FILENAME" ] || (( $(expr $(date +%s) - $(stat -c %Y "$CACHE_FILENAME")) > 604800 )); then
-        apt-cyg listall .* > $CACHE_FILENAME
+        apt-cyg listall .* | sort | uniq > $CACHE_FILENAME
     fi
 
     if [[ "$cur" == -* ]]; then
