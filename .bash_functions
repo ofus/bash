@@ -384,7 +384,7 @@ function 256colors() {
 }
 
 function set_prompt() {
-    OPTS=`getopt -o u:h:g:p:a: --long user:,host:,group:,pwd:,at: -n 'parse-options' -- "$@"`
+    OPTS=`getopt -o u:h:g:p:a:b: --long user:,host:,group:,pwd:,at:,bracket: -n 'parse-options' -- "$@"`
 
     if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
@@ -399,6 +399,7 @@ function set_prompt() {
     GROUPCOLOR=$(tput setaf 119)
     PWDCOLOR=$(tput setaf 11)
     ATCOLOR=$BIWHITE
+    BRACKETCOLOR=$BIWHITE
 
     while true; do
       case "$1" in
@@ -407,8 +408,9 @@ function set_prompt() {
         -g | --group )      GROUPCOLOR=$(tput setaf $2); shift 2 ;;
         -p | --pwd )        PWDCOLOR=$(tput setaf $2); shift 2 ;;
         -a | --at )         ATCOLOR=$(tput setaf $2); shift 2 ;;
+        -b | --bracket )    BRACKETCOLOR=$(tput setaf $2); shift 2 ;;
         -- ) shift; break ;;
-        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>]" 1>&2; exit 1; ;;
+        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>] [-b <color>]" 1>&2; exit 1; ;;
       esac
     done
 
@@ -418,7 +420,7 @@ function set_prompt() {
 
     RESET=$(tput sgr0)
 
-    export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
     export PS2="\[$ORANGE\]→ \[$RESET\]"
 }
 
