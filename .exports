@@ -19,6 +19,7 @@ export LC_ALL="en_US.UTF-8"
 ##### Reference: http://www.matrix44.net/blog/?p=870 ######
 # Highlight section titles in manual pages
 # Less Colors for Man Pages
+export LESS=-R
 export LESS_TERMCAP_mb=$'\E[1;30;48;5;226m'			# begin blinking
 export LESS_TERMCAP_md=$'\E[1;38;5;74m'		# begin bold
 export LESS_TERMCAP_me=$'\E[0m'			# end mode
