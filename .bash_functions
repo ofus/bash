@@ -184,7 +184,8 @@ function aqg() {
     fi
 
     local aq="${1}"
-    apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $aq
+    #apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $aq
+    apt-cache search $aq | grep -v "^lib" | grep -v "^ttf" | sort | grep -i --color $aq
 }
 
 function pacqg() {
@@ -194,7 +195,7 @@ function pacqg() {
     fi
 
     local pacq="${1}"
-    pacman -Ss $pacq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $pacq
+    pacman -Sl | awk {' print $2 '} | grep -v "^lib" | sort | grep -i --color $pacq
 }
 
 function show_installed() {
@@ -271,7 +272,7 @@ function tlsscan() {
 }
 
 function parse_svn_dirty() {
- [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo -n "*"
+    [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo -n "*"
 }
 
 function svn_test() {
@@ -417,49 +418,56 @@ function set_prompt() {
 
     RESET=$(tput sgr0)
 
-    export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
     export PS2="\[$ORANGE\]→ \[$RESET\]"
 }
 
 # Determine the branch information for this subversion repository. No support
 # for svn status, since that needs to hit the remote repository.
-function set_svn_branch {
-  if [ -d ".svn" ]; then
+function set_svn_branch() {
+    hash svn &>/dev/null
+    if [ $? -eq 0 ]; then
+        if [ -d ".svn" ]; then
 
-        # Capture the output of the "git status" command.
-        svn_info="$(svn info | egrep '^URL: ' 2> /dev/null)"
+            # Capture the output of the "git status" command.
+            svn_info="$(svn info | egrep '^URL: ' 2> /dev/null)"
 
-        # Get the name of the branch.
-        branch_pattern="^URL: .*/(branches|tags)/([^/]+)"
-        trunk_pattern="^URL: .*/trunk(/.*)?$"
-        if [[ ${svn_info} =~ $branch_pattern ]]; then
-        branch=${BASH_REMATCH[2]}
-        elif [[ ${svn_info} =~ $trunk_pattern ]]; then
-        branch='trunk'
+            # Get the name of the branch.
+            branch_pattern="^URL: .*/(branches|tags)/([^/]+)"
+            trunk_pattern="^URL: .*/trunk(/.*)?$"
+            if [[ ${svn_info} =~ $branch_pattern ]]; then
+            branch=${BASH_REMATCH[2]}
+            elif [[ ${svn_info} =~ $trunk_pattern ]]; then
+            branch='trunk'
+            fi
+
+            # Set the final branch string.
+            BRANCH="(${branch}) "
+        else
+            BRANCH=""
         fi
-
-        # Set the final branch string.
-        BRANCH="(${branch}) "
-    else
-        BRANCH=""
     fi
 }
 
-function get_svn_branch {
-    set_svn_branch
-    echo -n "$BRANCH"
+function parse_svn_branch() {
+    if hash svn &>/dev/null; then
+        set_svn_branch
+        echo -n "$BRANCH"
+    fi
 }
 
 # Mimic git diff with color
 function svndiff() {
-    if hash colordiff 2>/dev/null; then
-        svn diff -x -w -r "$1":"$2" "${@:3}" | colordiff
-    else
-        svn diff -x -w -r "$1":"$2" "${@:3}"
+    if hash svn &>/dev/null; then
+        if hash colordiff 2>/dev/null; then
+            svn diff -x -w -r "$1":"$2" "${@:3}" | colordiff
+        else
+            svn diff -x -w -r "$1":"$2" "${@:3}"
+        fi
     fi
 }
 
-function speakfile() {
+function speak_file() {
     FILENAME="$1"
     if [ -z "${1}" ]; then
         echo "E: You must give at least one search pattern"
@@ -480,7 +488,7 @@ function speakfile() {
     fi
 }
 
-function fingerprintCert() {
+function fingerprint_cert() {
     local FILENAME="${1}"
     if [ ! -f "$FILENAME" ]; then
         echo "File not found"
