@@ -43,7 +43,7 @@ _AUN()
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
 
-    COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} "$cur" 2> /dev/null ) )
+    COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} | grep "^$cur" 2> /dev/null ) )
     return 0
 }
 complete -F _AUN aun
