@@ -98,6 +98,36 @@ _PACUN()
 }
 complete -F _PACUN pacun
 
+_APTCYG()
+{
+   local cur prev words cword
+    _init_completion || return
+
+    CACHE_FILENAME="$HOME/.packages.txt"
+    
+    if [ -f "$CACHE_FILENAME" ] || (( $(expr $(date +%s) - $(stat -c %Y "$CACHE_FILENAME")) > 604800 )); then
+        apt-cyg listall .* > $CACHE_FILENAME
+    fi
+
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=( $( compgen -W '--nodeps --version' -- "$cur" ) )
+        return 0
+    fi
+
+    if (( $COMP_CWORD <= 1)); then
+        COMPREPLY=( $( compgen -W 'install remove update download show depends rdepends list listall category listfiles search searchall mirror cache' -- "$cur" ) )
+        return 0
+    elif (( $COMP_CWORD >= 2 )); then
+        if [[ ${COMP_WORDS[1]} == remove ]] || [[ ${COMP_WORDS[1]} == update ]] || [[ ${COMP_WORDS[1]} == listfiles ]] || [[ ${COMP_WORDS[1]} == list ]]; then
+            COMPREPLY=( $( apt-cyg list | grep "^$cur" --color 2> /dev/null ) )
+        elif [[ ${COMP_WORDS[1]} == install ]] || [[ ${COMP_WORDS[1]} == search ]] || [[ ${COMP_WORDS[1]} == show ]] || [[ ${COMP_WORDS[1]} == download ]] || [[ ${COMP_WORDS[1]} == depends ]] || [[ ${COMP_WORDS[1]} == rdepends ]] ; then
+            COMPREPLY=( $( grep "^$cur" "$CACHE_FILENAME" --color 2> /dev/null ) )
+        fi
+        return 0
+    fi
+}
+complete -F _APTCYG apt-cyg
+
 _PSQ()
 {
     local cur
