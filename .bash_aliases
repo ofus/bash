@@ -28,7 +28,7 @@ alias openports='netstat -nape --inet'
 alias ns='netstat -alnp --protocol=inet|grep -v CLOSE_WAIT|cut -c-6,21-94|tail'
 alias sysinfo='uname -a && grep MemTotal /proc/meminfo && grep "model name" /proc/cpuinfo && lspci -tv && lsusb -tv && head -n1 /etc/issue'
 alias meminfo="sudo dmidecode -t memory && sudo lshw -class memory"
-alias ai='apt-cache show' 
+alias ai='apt-cache show'
 alias aidl='sudo apt-get install --download-only -y'
 alias aq='apt-cache search'
 alias ag='sudo apt-get install'
@@ -73,7 +73,7 @@ alias ll='ls -al'
 alias grm='git branch -D'
 
 # add everything that needs to be added based on results of svn status
-alias svnadd="svn st | grep \? | awk '''{print \"svn add \"$2 }''' | bash" 
+alias svnadd="svn st | grep \? | awk '''{print \"svn add \"$2 }''' | bash"
 
 # show svn status, sans the noise from externals
 alias svnst='svn st --ignore-externals'
@@ -90,6 +90,7 @@ alias delsvn="find . -name .svn | xargs rm -rf"
 alias now="date +%Y%m%d%H%M%S"
 alias entropy="cat /proc/sys/kernel/random/entropy_avail"
 alias m4a="youtube-dl -f 140"
+alias mp3='youtube-dl --extract-audio --audio-format mp3'
 
 # Decoding URL encoding (percent encoding)
 # https://unix.stackexchange.com/a/159254
