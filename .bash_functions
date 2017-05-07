@@ -121,7 +121,13 @@ function getcertnames() {
         return 1
     fi
 
-    local domain="${1}"
+    local str="${1}"
+    if [[ $str == *"/"* ]]; then
+        local domain="$(echo $str | awk -F/ '{print $3}')"
+    else
+        local domain="$str"
+    fi
+
     echo "Testing ${domain}…"
     echo # newline
 
@@ -265,10 +271,14 @@ function tlsscan() {
         echo "E: You must give a hostname"
         return 1
     fi
-    local foo="${1}"
+    local str="${1}"
+    if [[ $str == *"/"* ]]; then
+        local domain="$(echo $str | awk -F/ '{print $3}')"
+    else
+        local domain="$str"
+    fi
     echo -e "GET / HTTP/1.0\nEOT" \
-        | openssl s_client -connect $foo:443 -servername $foo -showcerts
-    # openssl s_client -connect $foo:443 -servername $foo -showcerts
+        | openssl s_client -connect $domain:443 -servername $domain -showcerts
 }
 
 function parse_svn_dirty() {
@@ -308,7 +318,7 @@ function get_dir() {
     printf "%s" $(pwd | sed "s:$HOME:~:")
 }
 
-function set_titlebar {
+function set_titlebar() {
     case $TERM in
         *xterm*|ansi|rxvt)
             printf "\033]0;%s\007" "$*"
