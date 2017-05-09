@@ -394,7 +394,7 @@ function 256colors() {
 }
 
 function set_prompt() {
-    OPTS=`getopt -o u:h:g:p:a:b: --long user:,host:,group:,pwd:,at:,bracket: -n 'parse-options' -- "$@"`
+    OPTS=`getopt -o u:h:g:p:a:b:v: --long user:,host:,group:,pwd:,at:,bracket:,vcs: -n 'parse-options' -- "$@"`
 
     if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
@@ -410,6 +410,7 @@ function set_prompt() {
     PWDCOLOR=$(tput setaf 11)
     ATCOLOR=$BIWHITE
     BRACKETCOLOR=$BIWHITE
+    VCSCOLOR=$BIWHITE
 
     while true; do
       case "$1" in
@@ -419,8 +420,9 @@ function set_prompt() {
         -p | --pwd )        PWDCOLOR=$(tput setaf $2); shift 2 ;;
         -a | --at )         ATCOLOR=$(tput setaf $2); shift 2 ;;
         -b | --bracket )    BRACKETCOLOR=$(tput setaf $2); shift 2 ;;
+        -v | --vcs )        VCSCOLOR=$(tput setaf $2); shift 2 ;;
         -- ) shift; break ;;
-        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>] [-b <color>]" 1>&2; exit 1; ;;
+        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>] [-b <color>] [-v <color>]" 1>&2; exit 1; ;;
       esac
     done
 
@@ -429,9 +431,11 @@ function set_prompt() {
     fi
 
     RESET=$(tput sgr0)
-
-    export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    # $(__git_ps1 \" (%s)\")
+    # export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$VCSCOLOR\]\$(__git_ps1 \" (%s)\")\$(parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
     export PS2="\[$ORANGE\]→ \[$RESET\]"
+    # \$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)
 }
 
 # Determine the branch information for this subversion repository. No support
@@ -461,11 +465,23 @@ function set_svn_branch() {
     fi
 }
 
+# function parse_svn_branch() {
+#     if hash svn &>/dev/null; then
+#         set_svn_branch
+#         echo -n "$BRANCH"
+#     fi
+# }
+
 function parse_svn_branch() {
-    if hash svn &>/dev/null; then
-        set_svn_branch
-        echo -n "$BRANCH"
-    fi
+    parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | egrep -o '(tags|branches)/[^/]+|trunk' | egrep -o '[^/]+$' | awk '{print " ("$1")" }'
+}
+
+function parse_svn_url() {
+    svn info 2>/dev/null | sed -ne 's#^URL: ##p'
+}
+
+function parse_svn_repository_root() {
+    svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
 }
 
 # Mimic git diff with color
