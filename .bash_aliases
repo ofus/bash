@@ -83,6 +83,8 @@ alias svnign='svn pe svn:ignore .'
 # recursively delete .svn folders from current directory
 alias delsvn="find . -name .svn | xargs rm -rf"
 
+alias bb==bitbucket
+
 alias now="date +%Y%m%d%H%M%S"
 alias entropy="cat /proc/sys/kernel/random/entropy_avail"
 alias m4a="youtube-dl -f 140"
