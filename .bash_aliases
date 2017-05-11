@@ -54,21 +54,17 @@ alias pq="packages search"
 alias pi="packages info"
 
 ## COLORS ##
-alias ls='ls --color=auto --ignore-backups --time-style="+%x %X"'
+alias ls='ls --color=auto --ignore-backups'
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-alias Logs='colortail -n40 -f /var/log/syslog'
-
 alias MplayerCaca="mplayer -vo caca"
-alias Syslog='sudo colortail -n1000 /var/log/syslog'
 alias sslscan2="nmap --script +ssl-enum-ciphers -p443"
 alias composer="composer --ansi"
-alias xmlto='xmlto --skip-validation'
-alias ll='ls -al'
+alias ll='ls -Alog'
 
 alias grm='git branch -D'
 
@@ -103,3 +99,4 @@ alias urlencode='python -c "import sys, urllib as ul; \
 if [[ -x `which nc` ]]; then
   alias nyan='nc -v nyancat.dakko.us 23' # nyan cat
 fi
+
