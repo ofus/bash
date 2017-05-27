@@ -393,6 +393,122 @@ function 256colors() {
     fi
 }
 
+function setBackgroundColor()
+{
+    printf '\x1b[48;2;%s;%s;%sm' $1 $2 $3
+}
+
+function resetOutput()
+{
+    echo -en "\x1b[0m\n"
+}
+
+# Gives a color $1/255 % along HSV
+# Who knows what happens when $1 is outside 0-255
+# Echoes "$red $green $blue" where
+# $red $green and $blue are integers
+# ranging between 0 and 255 inclusive
+function rainbowColor()
+{ 
+    let h=$1/43
+    let f=$1-43*$h
+    let t=$f*255/43
+    let q=255-t
+
+    if [ $h -eq 0 ]
+    then
+        echo "255 $t 0"
+    elif [ $h -eq 1 ]
+    then
+        echo "$q 255 0"
+    elif [ $h -eq 2 ]
+    then
+        echo "0 255 $t"
+    elif [ $h -eq 3 ]
+    then
+        echo "0 $q 255"
+    elif [ $h -eq 4 ]
+    then
+        echo "$t 0 255"
+    elif [ $h -eq 5 ]
+    then
+        echo "255 0 $q"
+    else
+        # execution should never reach here
+        echo "0 0 0"
+    fi
+}
+
+# https://github.com/pvinis/colortools
+function truecolors() {
+
+    local arg="${1}"
+    
+    if [ $arg == 1 ]; then
+        awk 'BEGIN{
+            s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
+            for (colnum = 0; colnum<77; colnum++) {
+                r = 255-(colnum*255/76);
+                g = (colnum*510/76);
+                b = (colnum*255/76);
+                if (g>255) g = 510-g;
+                printf "\033[48;2;%d;%d;%dm", r,g,b;
+                printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
+                printf "%s\033[0m", substr(s,colnum+1,1);
+            }
+            printf "\n";
+        }'
+    elif [ $arg == 2 ]; then
+        for i in `seq 0 127`; do
+            setBackgroundColor $i 0 0
+            echo -en " "
+        done
+        resetOutput
+        for i in `seq 255 -1 128`; do
+            setBackgroundColor $i 0 0
+            echo -en " "
+        done
+        resetOutput
+
+        for i in `seq 0 127`; do
+            setBackgroundColor 0 $i 0
+            echo -n " "
+        done
+        resetOutput
+        for i in `seq 255 -1 128`; do
+            setBackgroundColor 0 $i 0
+            echo -n " "
+        done
+        resetOutput
+
+        for i in `seq 0 127`; do
+            setBackgroundColor 0 0 $i
+            echo -n " "
+        done
+        resetOutput
+        for i in `seq 255 -1 128`; do
+            setBackgroundColor 0 0 $i
+            echo -n " "
+        done
+        resetOutput
+
+        for i in `seq 0 127`; do
+            setBackgroundColor `rainbowColor $i`
+            echo -n " "
+        done
+        resetOutput
+        for i in `seq 255 -1 128`; do
+            setBackgroundColor `rainbowColor $i`
+            echo -n " "
+        done
+        resetOutput
+    elif [ $arg == 3 ]; then
+        printf "\x1b[38;2;255;100;0mTRUECOLOR\x1b[0m\n"
+    else
+        echo "Usage: truecolors <1-3>"
+    fi
+}
+
 function set_prompt() {
     OPTS=`getopt -o u:h:g:p:a:b:v: --long user:,host:,group:,pwd:,at:,bracket:,vcs: -n 'parse-options' -- "$@"`
 
