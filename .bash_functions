@@ -162,6 +162,14 @@ function parse_bzr_changes() {
     [[ $BZR_CHANGES != 0 ]] && echo "[$BZR_CHANGES]"
 }
 
+function pacfiles() {
+    if [ -z "${1}" ]; then
+        echo "Missing package name" 1>&2
+        return 1
+    fi
+    pacman -Q "${1}" -l
+}
+
 function parse_git_dirty() {
     [[ $(git status 2> /dev/null | tail -n1) != *"working "*" clean"* ]] && echo "*"
 }

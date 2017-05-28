@@ -98,6 +98,16 @@ _PACUN()
 }
 complete -F _PACUN pacun
 
+_PACFILES()
+{
+    local cur
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    COMPREPLY=( $( pacman -Q | cut -d ' ' -f 1 | grep "^$cur" 2> /dev/null ) )
+    return 0
+}
+complete -F _PACFILES pacfiles
+
 _APTCYG()
 {
    local cur prev words cword
