@@ -320,7 +320,7 @@ function get_dir() {
 
 function set_titlebar() {
     case $TERM in
-        *xterm*|*screen*|*tmux*|ansi|rxvt)
+        *xterm*|ansi|rxvt)
             printf "\033]0;%s\007" "$*"
             ;;
     esac
@@ -333,20 +333,13 @@ function getrandcolor() {
 }
 
 function nolines() {
-    tr '\n' ' ' && echo
+    tr '\n' ' '
+    echo
 }
 
 function noblanklines() {
     sed '/^$/d'
-}
-
-function oddlines() {
-    sed -n 'p;n'
-}
-
-function evenlines() {
-    sed -n '1d;p;n'
-}
+}   
 
 function 256colors() {
     local arg="${1}"
@@ -374,7 +367,7 @@ function 256colors() {
         # and/or modify it under the terms of the Do What The Fuck You Want
         # To Public License, Version 2, as published by Sam Hocevar. See
         # http://sam.zoy.org/wtfpl/COPYING for more details.
-        for fgbg in 38 48 ; do
+        for fgbg in 38 48 ; do #Foreground/Background
                 for color in {0..256} ; do #Colors
                         #Display the color
                         if [ $color -lt 10 ]; then
@@ -387,12 +380,14 @@ function 256colors() {
 
                         #Display 10 colors per lines
                         if [ $((($color - 15) % 36)) == 0 ] ; then
-                            echo
+                            echo #New line
+                        # elif [ $color == 15 ]; then
+                        #     echo
                         elif [ $color == 231 ]; then
                             echo
                         fi
                 done
-                echo
+                echo #New line
         done
 
     fi
@@ -420,17 +415,23 @@ function rainbowColor()
     let t=$f*255/43
     let q=255-t
 
-    if [ $h -eq 0 ]; then
+    if [ $h -eq 0 ]
+    then
         echo "255 $t 0"
-    elif [ $h -eq 1 ]; then
+    elif [ $h -eq 1 ]
+    then
         echo "$q 255 0"
-    elif [ $h -eq 2 ]; then
+    elif [ $h -eq 2 ]
+    then
         echo "0 255 $t"
-    elif [ $h -eq 3 ]; then
+    elif [ $h -eq 3 ]
+    then
         echo "0 $q 255"
-    elif [ $h -eq 4 ]; then
+    elif [ $h -eq 4 ]
+    then
         echo "$t 0 255"
-    elif [ $h -eq 5 ]; then
+    elif [ $h -eq 5 ]
+    then
         echo "255 0 $q"
     else
         # execution should never reach here
