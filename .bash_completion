@@ -93,7 +93,7 @@ _PACUN()
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
 
-    COMPREPLY=( $( pacman -Q | awk {' print $1 '} | grep "^$cur" 2> /dev/null ) )
+    COMPREPLY=( $( pacman -Q | cut -d ' ' -f 1 | grep "^$cur" 2> /dev/null ) )
     return 0
 }
 complete -F _PACUN pacun
@@ -185,6 +185,29 @@ complete -F _VAGRANT vagrant
 
 _BITBUCKET()
 {
+    # create-repository|create-repo [options] <owner> <slug>
+    # pull-requests [options] <owner> <slug> [id]
+    # repositories|repos [options] [owner] [slug]
+    # team-members [options] <teamName>
+    # team [options] <teamName>
+    # user [options] <username>
+
+   local cur prev words cword
+    _init_completion || return
+
+    if (( $COMP_CWORD <= 1)); then
+        COMPREPLY=( $( compgen -W 'create-repository create-repo pull-requests repositories repos team-members team user' -- "$cur" ) )
+        return 0
+    elif (( $COMP_CWORD > 1)); then
+        if [[ ${COMP_WORDS[1]} == uninstall ]] || [[ ${COMP_WORDS[1]} == reinstall ]] || [[ ${COMP_WORDS[1]} == upgrade ]] || [[ ${COMP_WORDS[1]} == files ]]; then
+            COMPREPLY=( $( dpkg --get-selections  | grep -v deinstall | awk {' print $1 '} | grep "^$cur" 2> /dev/null ) )
+        elif [[ ${COMP_WORDS[1]} == install ]] || [[ ${COMP_WORDS[1]} == search ]] || [[ ${COMP_WORDS[1]} == show ]]; then
+            COMPREPLY=( $( apt-cache --no-generate pkgnames "$cur" 2> /dev/null ) )
+        fi
+        return 0 
+    fi
+
+
     local cur
     cur=${COMP_WORDS[COMP_CWORD]}
     local cterm
@@ -355,13 +378,3 @@ _cipherscan()
 }
 complete -F _cipherscan cipherscan;
 complete -F _cipherscan cs;
-
-# _CSCAN()
-# {
-#     #~/.cipherscan/hosts.log
-#     local cur
-#     cur=${COMP_WORDS[COMP_CWORD]}
-#     hosts=$( cat $HOME/.cipherscan/hosts.log | grep "\." | sed ':a;N;$!ba;s/\n/\ /g' )
-#     COMPREPLY=( $(compgen -W "$hosts" -- "$cur" ) )
-#     return 0
-# }
