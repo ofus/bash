@@ -386,7 +386,7 @@ function 256colors() {
 }
 
 function set_prompt() {
-    OPTS=`getopt -o u:h:g:p:a: --long user:,host:,group:,pwd:,at: -n 'parse-options' -- "$@"`
+    OPTS=`getopt -o u:h:g:p:a:b:v:e: --long user:,host:,group:,pwd:,at:,bracket:,vcs:,emoji: -n 'parse-options' -- "$@"`
 
     if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
@@ -401,6 +401,9 @@ function set_prompt() {
     GROUPCOLOR=$(tput setaf 119)
     PWDCOLOR=$(tput setaf 11)
     ATCOLOR=$BIWHITE
+    BRACKETCOLOR=$BIWHITE
+    VCSCOLOR=$BIWHITE
+    EMOJICOLOR=$(tput setaf 37)
 
     while true; do
       case "$1" in
@@ -409,8 +412,11 @@ function set_prompt() {
         -g | --group )      GROUPCOLOR=$(tput setaf $2); shift 2 ;;
         -p | --pwd )        PWDCOLOR=$(tput setaf $2); shift 2 ;;
         -a | --at )         ATCOLOR=$(tput setaf $2); shift 2 ;;
+        -b | --bracket )    BRACKETCOLOR=$(tput setaf $2); shift 2 ;;
+        -v | --vcs )        VCSCOLOR=$(tput setaf $2); shift 2 ;;
+        -e | --emoji )      EMOJICOLOR=$(tput setaf $2); shift 2 ;;
         -- ) shift; break ;;
-        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>]" 1>&2; exit 1; ;;
+        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>] [-b <color>] [-v <color>] [-e <color>]" 1>&2; exit 1; ;;
       esac
     done
 
@@ -428,7 +434,7 @@ function set_prompt() {
     #export PS1="\[$BIWHITE\][ \[$PWDCOLOR\]\$PWD\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
 
     #export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
-    export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\[$RESET\]\[$GROUPCOLOR\]\[$ATCOLOR\]\[$HOSTCOLOR\]\[$PWDCOLOR\]\W\[$BIWHITE\] ]\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    export PS1="\[$BRACKETCOLOR\][ \[$EMOJICOLOR\]📱 \[$USERCOLOR\]\[$RESET\]\[$GROUPCOLOR\]\[$ATCOLOR\]\[$HOSTCOLOR\]\[$PWDCOLOR\]\W\[$VCSCOLOR\]\$(parse_git_dirty)\[$BRACKETCOLOR\] ]\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
     #export PS1="\[$BIWHITE\][ \[$PWDCOLOR\]\W\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
     export PS2="\[$ORANGE\]→ \[$RESET\]"
 }
