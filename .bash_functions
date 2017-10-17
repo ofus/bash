@@ -121,7 +121,13 @@ function getcertnames() {
         return 1
     fi
 
-    local domain="${1}"
+    local str="${1}"
+    if [[ $str == *"/"* ]]; then
+        local domain="$(echo $str | awk -F/ '{print $3}')"
+    else
+        local domain="$str"
+    fi
+
     echo "Testing ${domain}…"
     echo # newline
 
@@ -156,6 +162,14 @@ function parse_bzr_changes() {
     [[ $BZR_CHANGES != 0 ]] && echo "[$BZR_CHANGES]"
 }
 
+function pacfiles() {
+    if [ -z "${1}" ]; then
+        echo "Missing package name" 1>&2
+        return 1
+    fi
+    pacman -Q "${1}" -l
+}
+
 function parse_git_dirty() {
     [[ $(git status 2> /dev/null | tail -n1) != *"working "*" clean"* ]] && echo "*"
 }
@@ -184,21 +198,19 @@ function aqg() {
     fi
 
     local aq="${1}"
-    #apt-cache search $aq | grep -v lib | grep -i --color $aq
-    # apt-cache search $aq | grep -i --color $aq
-    apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $aq
+    #apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $aq
+    apt-cache search $aq | grep -v "^lib" | grep -v "^ttf" | sort | grep -i --color $aq
 }
 
-function pqg() {
+function pacqg() {
     if [ -z "${1}" ]; then
         echo "E: You must give at least one search pattern"
         return 1
     fi
 
-    local aq="${1}"
-    packages list-all 2>/dev/null | sed 's/\//\t/g' | awk {' print $1 '} | sort | grep -i --color $aq
+    local pacq="${1}"
+    pacman -Sl | awk {' print $2 '} | grep -v "^lib" | sort | grep -i --color $pacq
 }
-
 
 function show_installed() {
     grep Install /var/log/apt/history.log | sed 's/Install: //g' | sed 's/:amd64//g' | sed 's/(/[/g' | sed 's/)/]/g' | sed -e 's/\[[^][]*\]//g' | sed 's/ , /\n/g'
@@ -267,14 +279,18 @@ function tlsscan() {
         echo "E: You must give a hostname"
         return 1
     fi
-    local foo="${1}"
+    local str="${1}"
+    if [[ $str == *"/"* ]]; then
+        local domain="$(echo $str | awk -F/ '{print $3}')"
+    else
+        local domain="$str"
+    fi
     echo -e "GET / HTTP/1.0\nEOT" \
-        | openssl s_client -connect $foo:443 -servername $foo -showcerts
-    # openssl s_client -connect $foo:443 -servername $foo -showcerts
+        | openssl s_client -connect $domain:443 -servername $domain -showcerts
 }
 
 function parse_svn_dirty() {
- [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo -n "*"
+    [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo -n "*"
 }
 
 function svn_test() {
@@ -310,7 +326,7 @@ function get_dir() {
     printf "%s" $(pwd | sed "s:$HOME:~:")
 }
 
-function set_titlebar {
+function set_titlebar() {
     case $TERM in
         *xterm*|ansi|rxvt)
             printf "\033]0;%s\007" "$*"
@@ -331,7 +347,7 @@ function nolines() {
 
 function noblanklines() {
     sed '/^$/d'
-}
+}   
 
 function 256colors() {
     local arg="${1}"
@@ -385,8 +401,124 @@ function 256colors() {
     fi
 }
 
+function setBackgroundColor()
+{
+    printf '\x1b[48;2;%s;%s;%sm' $1 $2 $3
+}
+
+function resetOutput()
+{
+    echo -en "\x1b[0m\n"
+}
+
+# Gives a color $1/255 % along HSV
+# Who knows what happens when $1 is outside 0-255
+# Echoes "$red $green $blue" where
+# $red $green and $blue are integers
+# ranging between 0 and 255 inclusive
+function rainbowColor()
+{ 
+    let h=$1/43
+    let f=$1-43*$h
+    let t=$f*255/43
+    let q=255-t
+
+    if [ $h -eq 0 ]
+    then
+        echo "255 $t 0"
+    elif [ $h -eq 1 ]
+    then
+        echo "$q 255 0"
+    elif [ $h -eq 2 ]
+    then
+        echo "0 255 $t"
+    elif [ $h -eq 3 ]
+    then
+        echo "0 $q 255"
+    elif [ $h -eq 4 ]
+    then
+        echo "$t 0 255"
+    elif [ $h -eq 5 ]
+    then
+        echo "255 0 $q"
+    else
+        # execution should never reach here
+        echo "0 0 0"
+    fi
+}
+
+# https://github.com/pvinis/colortools
+function truecolors() {
+
+    local arg="${1}"
+    
+    if [ $arg == 1 ]; then
+        awk 'BEGIN{
+            s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
+            for (colnum = 0; colnum<77; colnum++) {
+                r = 255-(colnum*255/76);
+                g = (colnum*510/76);
+                b = (colnum*255/76);
+                if (g>255) g = 510-g;
+                printf "\033[48;2;%d;%d;%dm", r,g,b;
+                printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
+                printf "%s\033[0m", substr(s,colnum+1,1);
+            }
+            printf "\n";
+        }'
+    elif [ $arg == 2 ]; then
+        for i in `seq 0 127`; do
+            setBackgroundColor $i 0 0
+            echo -en " "
+        done
+        resetOutput
+        for i in `seq 255 -1 128`; do
+            setBackgroundColor $i 0 0
+            echo -en " "
+        done
+        resetOutput
+
+        for i in `seq 0 127`; do
+            setBackgroundColor 0 $i 0
+            echo -n " "
+        done
+        resetOutput
+        for i in `seq 255 -1 128`; do
+            setBackgroundColor 0 $i 0
+            echo -n " "
+        done
+        resetOutput
+
+        for i in `seq 0 127`; do
+            setBackgroundColor 0 0 $i
+            echo -n " "
+        done
+        resetOutput
+        for i in `seq 255 -1 128`; do
+            setBackgroundColor 0 0 $i
+            echo -n " "
+        done
+        resetOutput
+
+        for i in `seq 0 127`; do
+            setBackgroundColor `rainbowColor $i`
+            echo -n " "
+        done
+        resetOutput
+        for i in `seq 255 -1 128`; do
+            setBackgroundColor `rainbowColor $i`
+            echo -n " "
+        done
+        resetOutput
+    elif [ $arg == 3 ]; then
+        printf "\x1b[38;2;255;100;0mTRUECOLOR\x1b[0m\n"
+    else
+        echo "Usage: truecolors <1-3>"
+    fi
+}
+
 function set_prompt() {
-    OPTS=`getopt -o u:h:g:p:a:b:v:e: --long user:,host:,group:,pwd:,at:,bracket:,vcs:,emoji: -n 'parse-options' -- "$@"`
+    OPTS=`getopt -o u:h:g:p:a:b:v: --long user:,host:,group:,pwd:,at:,bracket:,vcs: -n 'parse-options' -- "$@"`
 
     if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
@@ -403,7 +535,6 @@ function set_prompt() {
     ATCOLOR=$BIWHITE
     BRACKETCOLOR=$BIWHITE
     VCSCOLOR=$BIWHITE
-    EMOJICOLOR=$(tput setaf 37)
 
     while true; do
       case "$1" in
@@ -414,9 +545,8 @@ function set_prompt() {
         -a | --at )         ATCOLOR=$(tput setaf $2); shift 2 ;;
         -b | --bracket )    BRACKETCOLOR=$(tput setaf $2); shift 2 ;;
         -v | --vcs )        VCSCOLOR=$(tput setaf $2); shift 2 ;;
-        -e | --emoji )      EMOJICOLOR=$(tput setaf $2); shift 2 ;;
         -- ) shift; break ;;
-        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>] [-b <color>] [-v <color>] [-e <color>]" 1>&2; exit 1; ;;
+        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>] [-b <color>] [-v <color>]" 1>&2; exit 1; ;;
       esac
     done
 
@@ -425,59 +555,75 @@ function set_prompt() {
     fi
 
     RESET=$(tput sgr0)
-
-    # if [[ $(realpath $(pwd) 2>/dev/null | grep "^\/data\/data\/com\.termux\/files" 2>/dev/null | wc -l) != 0 ]]; then
-    #     PWD="$(realpath $(pwd) | sed 's/\/data\/data\/com\.termux\/files/\|/g')"
-    # else
-    #     PWD="$(realpath $(pwd))"
-    # fi
-    #export PS1="\[$BIWHITE\][ \[$PWDCOLOR\]\$PWD\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
-
-    #export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
-    export PS1="\[$BRACKETCOLOR\][ \[$EMOJICOLOR\]📱 \[$USERCOLOR\]\[$RESET\]\[$GROUPCOLOR\]\[$ATCOLOR\]\[$HOSTCOLOR\]\[$PWDCOLOR\]\W\[$VCSCOLOR\]\$(parse_git_dirty)\[$BRACKETCOLOR\] ]\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
-    #export PS1="\[$BIWHITE\][ \[$PWDCOLOR\]\W\[$BIWHITE\] ]\$([[ -n \$(git branch 2> /dev/null && get_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && get_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    # $(__git_ps1 \" (%s)\")
+    # export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    # export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$VCSCOLOR\]\$(__git_ps1 \" (%s)\")\$(parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    # export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$VCSCOLOR\]\$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    #export PS1="\[$BRACKETCOLOR\]📱 \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$VCSCOLOR\]\$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    export PS1="\[$BRACKETCOLOR\]\[$PWDCOLOR\]\w \[$RESET\]\[$VCSCOLOR\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    
     export PS2="\[$ORANGE\]→ \[$RESET\]"
+    # \$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)
 }
 
 # Determine the branch information for this subversion repository. No support
 # for svn status, since that needs to hit the remote repository.
-function set_svn_branch {
-  if [ -d ".svn" ]; then
+function set_svn_branch() {
+    hash svn &>/dev/null
+    if [ $? -eq 0 ]; then
+        if [ -d ".svn" ]; then
 
-        # Capture the output of the "git status" command.
-        svn_info="$(svn info | egrep '^URL: ' 2> /dev/null)"
+            # Capture the output of the "git status" command.
+            svn_info="$(svn info | egrep '^URL: ' 2> /dev/null)"
 
-        # Get the name of the branch.
-        branch_pattern="^URL: .*/(branches|tags)/([^/]+)"
-        trunk_pattern="^URL: .*/trunk(/.*)?$"
-        if [[ ${svn_info} =~ $branch_pattern ]]; then
-        branch=${BASH_REMATCH[2]}
-        elif [[ ${svn_info} =~ $trunk_pattern ]]; then
-        branch='trunk'
+            # Get the name of the branch.
+            branch_pattern="^URL: .*/(branches|tags)/([^/]+)"
+            trunk_pattern="^URL: .*/trunk(/.*)?$"
+            if [[ ${svn_info} =~ $branch_pattern ]]; then
+            branch=${BASH_REMATCH[2]}
+            elif [[ ${svn_info} =~ $trunk_pattern ]]; then
+            branch='trunk'
+            fi
+
+            # Set the final branch string.
+            BRANCH="(${branch}) "
+        else
+            BRANCH=""
         fi
-
-        # Set the final branch string.
-        BRANCH="(${branch}) "
-    else
-        BRANCH=""
     fi
 }
 
-function get_svn_branch {
-    set_svn_branch
-    echo -n "$BRANCH"
+# function parse_svn_branch() {
+#     if hash svn &>/dev/null; then
+#         set_svn_branch
+#         echo -n "$BRANCH"
+#     fi
+# }
+
+function parse_svn_branch() {
+    parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | egrep -o '(tags|branches)/[^/]+|trunk' | egrep -o '[^/]+$' | awk '{print " ("$1")" }'
+}
+
+function parse_svn_url() {
+    svn info 2>/dev/null | sed -ne 's#^URL: ##p'
+}
+
+function parse_svn_repository_root() {
+    svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
 }
 
 # Mimic git diff with color
 function svndiff() {
-    if hash colordiff 2>/dev/null; then
-        svn diff -x -w -r "$1":"$2" "${@:3}" | colordiff
-    else
-        svn diff -x -w -r "$1":"$2" "${@:3}"
+    if hash svn &>/dev/null; then
+        if hash colordiff 2>/dev/null; then
+            svn diff -x -w -r "$1":"$2" "${@:3}" | colordiff
+        else
+            svn diff -x -w -r "$1":"$2" "${@:3}"
+        fi
     fi
 }
 
-function speakfile() {
+function speak_file() {
     FILENAME="$1"
     if [ -z "${1}" ]; then
         echo "E: You must give at least one search pattern"
@@ -539,7 +685,7 @@ function speak() {
     done
 }
 
-function fingerprintCert() {
+function fingerprint_cert() {
     local FILENAME="${1}"
     if [ ! -f "$FILENAME" ]; then
         echo "File not found"
@@ -552,7 +698,7 @@ function doihave() {
     if hash dpkg 2>/dev/null; then
         dpkg --get-selections \
         | grep -v deinstall \
-        | awk {' print \$1 '} \
+        | awk {' print $1 '} \
         | grep "${@}"
         return 0
     elif hash pacman 2>/dev/null; then
@@ -570,5 +716,10 @@ function doihave() {
 }
 
 function sshd_check() {
-    [[ $( ps -C sshd -o pid= 2>/dev/null | wc -l) > 1 ]] || sshd
+    if [[ ! $( ps -C sshd -o pid= 2>/dev/null | wc -l) > 1 ]]; then
+        termux-setup-storage
+        sshd
+        IP=$(ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+        echo "$( date '+%H:%m %x') termux sshd $IP:8022" | sendxmpp ofus@ofus.in
+    fi
 }

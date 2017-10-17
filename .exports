@@ -7,19 +7,19 @@ fi
 
 export HISTIGNORE="\&:pwd:fg:bg:exit:clear"   # don't append consecutive duplicates of these
 export HISTCONTROL=ignoredups:erasedups               # ingore duplicates and spaces (ignoreboth|ignoredups|ignorespace)
-export HISTSIZE=2000000000
-# bash history will save all commands
+export HISTSIZE=                                      # bash history will save all commands
 export HISTFILESIZE=                                  # unlimited size
 export HISTTIMEFORMAT="[%Y-%m-%d - %H:%M:%S] "
 export HISTFILE=~/.bash_eternal_history
 
 # Prefer US English and use UTF-8
-export LANG="en_US"
+export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
 ##### Reference: http://www.matrix44.net/blog/?p=870 ######
 # Highlight section titles in manual pages
 # Less Colors for Man Pages
+export LESS=-R
 export LESS_TERMCAP_mb=$'\E[1;30;48;5;226m'			# begin blinking
 export LESS_TERMCAP_md=$'\E[1;38;5;74m'		# begin bold
 export LESS_TERMCAP_me=$'\E[0m'			# end mode
@@ -38,3 +38,10 @@ export BZR_LOG="/dev/null"
 
 GPG_TTY=$(tty)
 export GPG_TTY
+
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_STATESEPARATOR=
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWCOLORHINTS=1
+export GIT_PS1_SHOWUPSTREAM=auto
+export GIT_PS1_SHOWSTASHSTATE=1

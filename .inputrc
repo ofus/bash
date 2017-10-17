@@ -36,6 +36,9 @@ set input-meta on
 set output-meta on
 set convert-meta off
 
+# Use GNU ls colors when tab-completing files
+set colored-stats on
+
 # Use Alt/Meta + Delete to delete the preceding word
 "\e[3;3~": kill-word
 
