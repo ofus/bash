@@ -101,3 +101,4 @@ alias urlencode='python -c "import sys, urllib as ul; \
 if [[ -x `which nc` ]]; then
   alias nyan='nc -v nyancat.dakko.us 23' # nyan cat
 fi
+alias nls='npm list -g --depth=0'
