@@ -21,6 +21,21 @@ for file in ~/.{path,bash_functions,bash_prompt,exports,bash_aliases,extra}; do
 done
 unset file
 
+# repair path
+if [ -n "$PATH" ]; then
+  old_PATH=$PATH:; PATH=
+  while [ -n "$old_PATH" ]; do
+    x=${old_PATH%%:*}       # the first remaining entry
+    case $PATH: in
+      *:"$x":*) ;;         # already there
+      *) PATH=$PATH:$x;;    # not there yet
+    esac
+    old_PATH=${old_PATH#*:}
+  done
+  PATH=${PATH#:}
+  unset old_PATH x
+fi
+
 # Enable some Bash 4 features when possible:
 for option in histappend checkwinsize autocd globstar; do
 	shopt -s "$option" 2> /dev/null
