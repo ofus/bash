@@ -67,7 +67,21 @@ alias xmlto='xmlto --skip-validation'
 alias ll='ls -al'
 
 alias grm='git branch -D'
+alias bb=bitbucket
 
+alias now="date +%Y%m%d%H%M%S"
+alias entropy="cat /proc/sys/kernel/random/entropy_avail"
+alias m4a="youtube-dl -f 140"
+alias mp3='youtube-dl -f 140 --extract-audio --audio-format mp3 --add-metadata --metadata-from-title "%(artist)s - %(title)s"'
+
+# Decoding URL encoding (percent encoding)
+# https://unix.stackexchange.com/a/159254
+alias urldecode='python -c "import sys, urllib as ul; \
+    print ul.unquote_plus(sys.argv[1])"'
+alias urlencode='python -c "import sys, urllib as ul; \
+    print ul.quote_plus(sys.argv[1])"'
+
+###### SVN ########################
 # add everything that needs to be added based on results of svn status
 alias svnadd="svn st | grep \? | awk '''{print \"svn add \"$2 }''' | bash" 
 
@@ -82,20 +96,6 @@ alias svnign='svn pe svn:ignore .'
 
 # recursively delete .svn folders from current directory
 alias delsvn="find . -name .svn | xargs rm -rf"
-
-alias bb=bitbucket
-
-alias now="date +%Y%m%d%H%M%S"
-alias entropy="cat /proc/sys/kernel/random/entropy_avail"
-alias m4a="youtube-dl -f 140"
-alias mp3='youtube-dl -f 140 --extract-audio --audio-format mp3 --add-metadata --metadata-from-title "%(artist)s - %(title)s"'
-
-# Decoding URL encoding (percent encoding)
-# https://unix.stackexchange.com/a/159254
-alias urldecode='python -c "import sys, urllib as ul; \
-    print ul.unquote_plus(sys.argv[1])"'
-alias urlencode='python -c "import sys, urllib as ul; \
-    print ul.quote_plus(sys.argv[1])"'
 
 # https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/nyan/nyan.plugin.zsh
 if [[ -x `which nc` ]]; then
