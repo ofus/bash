@@ -45,8 +45,15 @@ fi
 bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
 if [ $bmajor -gt 3 ] || [ $bmajor -eq 3 -a $bminor -ge 2 ]; then
 	if ! shopt -oq posix; then
-	    if shopt -q progcomp && [ -r /usr/local/Cellar/bash-completion/1.3/etc/bash_completion ]; then
-	        . /usr/local/Cellar/bash-completion/1.3/etc/bash_completion
+		# [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+	    if shopt -q progcomp && [ -r /usr/local/Cellar/bash-completion/1.3_3/etc/bash_completion ]; then
+        	# Source completion code.
+    	    . /usr/local/Cellar/bash-completion/1.3_3/etc/bash_completion
+	    # fi
+
+		
+	    # if shopt -q progcomp && [ -r /usr/local/Cellar/bash-completion/1.3_3/etc/bash_completion ]; then
+	    #     . /usr/local/Cellar/bash-completion/1.3_3/etc/bash_completion
 		elif [ -f /usr/local/share/bash-completion/bash_completion ]; then
 	        . /usr/local/share/bash-completion/bash_completion
 	    elif [ -f /usr/share/bash-completion/bash_completion ]; then
