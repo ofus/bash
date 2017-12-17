@@ -237,7 +237,7 @@ function parse_bzr_changes() {
 }
 
 function parse_git_dirty() {
-        [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
+        [[ $(git status 2> /dev/null | tail -n1) != *"working "*" clean"* ]] && echo "*"
 }
 
 function parse_git_branch() {
@@ -442,7 +442,7 @@ function reset_output()
 # Echoes "$red $green $blue" where
 # $red $green and $blue are integers
 # ranging between 0 and 255 inclusive
-function rainbow_color()
+function rgbcolor()
 { 
     let h=$1/43
     let f=$1-43*$h
@@ -527,12 +527,12 @@ function truecolors() {
         reset_output
 
         for i in `seq 0 127`; do
-            set_background_color `rainbow_color $i`
+            set_background_color `rgbcolor $i`
             echo -n " "
         done
         reset_output
         for i in `seq 255 -1 128`; do
-            set_background_color `rainbow_color $i`
+            set_background_color `rgbcolor $i`
             echo -n " "
         done
         reset_output
