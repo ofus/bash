@@ -377,9 +377,9 @@ function noblanklines() {
 
 function 256colors() {
     local arg="${1}"
-    if [ $arg == 2 ]; then
+    if [[ $arg == 2 ]]; then
         for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
-    elif [ $arg == 3 ]; then
+    elif [[ $arg == 3 ]]; then
         T='gYw'   # The test text
 
         echo -e "\n                 40m     41m     42m     43m     44m     45m     46m     47m";
@@ -404,20 +404,20 @@ function 256colors() {
         for fgbg in 38 48 ; do #Foreground/Background
                 for color in {0..256} ; do #Colors
                         #Display the color
-                        if [ $color -lt 10 ]; then
+                        if [[ $color -lt 10 ]]; then
                             echo -en "\e[${fgbg};5;${color}m ${color}   \e[0m"
-                        elif [ $color -lt 100 ]; then
+                        elif [[  $color -lt 100 ]]; then
                             echo -en "\e[${fgbg};5;${color}m ${color}  \e[0m"
                         else
                             echo -en "\e[${fgbg};5;${color}m ${color} \e[0m"
                         fi
 
                         #Display 10 colors per lines
-                        if [ $((($color - 15) % 36)) == 0 ] ; then
+                        if [[ $((($color - 15) % 36)) == 0 ]] ; then
                             echo #New line
                         # elif [ $color == 15 ]; then
                         #     echo
-                        elif [ $color == 231 ]; then
+                        elif [[  $color == 231 ]]; then
                             echo
                         fi
                 done
@@ -449,22 +449,22 @@ function rgbcolor()
     let t=$f*255/43
     let q=255-t
 
-    if [ $h -eq 0 ]
+    if [[ $h -eq 0 ]]
     then
         echo "255 $t 0"
-    elif [ $h -eq 1 ]
+    elif [[ $h -eq 1 ]]
     then
         echo "$q 255 0"
-    elif [ $h -eq 2 ]
+    elif [[ $h -eq 2 ]]
     then
         echo "0 255 $t"
-    elif [ $h -eq 3 ]
+    elif [[ $h -eq 3 ]]
     then
         echo "0 $q 255"
-    elif [ $h -eq 4 ]
+    elif [[ $h -eq 4 ]]
     then
         echo "$t 0 255"
-    elif [ $h -eq 5 ]
+    elif [[ $h -eq 5 ]]
     then
         echo "255 0 $q"
     else
@@ -478,7 +478,7 @@ function truecolors() {
 
     local arg="${1}"
     
-    if [ $arg == 1 ]; then
+    if [[ $arg == 1 ]]; then
         awk 'BEGIN{
             s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
             for (colnum = 0; colnum<77; colnum++) {
@@ -492,7 +492,7 @@ function truecolors() {
             }
             printf "\n";
         }'
-    elif [ $arg == 2 ]; then
+    elif [[ $arg == 2 ]]; then
         for i in `seq 0 127`; do
             set_background_color $i 0 0
             echo -en " "
@@ -536,7 +536,7 @@ function truecolors() {
             echo -n " "
         done
         reset_output
-    elif [ $arg == 3 ]; then
+    elif [[ $arg == 3 ]]; then
         printf "\x1b[38;2;255;100;0mTRUECOLOR\x1b[0m\n"
     else
         echo "Usage: truecolors <1-3>"
@@ -546,7 +546,7 @@ function truecolors() {
 function set_prompt() {
     OPTS=`getopt -o u:h:g:p:a:b:v: --long user:,host:,group:,pwd:,at:,bracket:,vcs: -n 'parse-options' -- "$@"`
 
-    if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+    if [[ $? != 0 ]] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
     # echo "$OPTS"
     eval set -- "$OPTS"
