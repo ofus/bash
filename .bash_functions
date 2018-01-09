@@ -245,9 +245,15 @@ function parse_git_branch() {
 }
 
 function show_group_not_default() {
+    if [[ ! -f /etc/passwd || -f /etc/group ]]; then
+        return 0
+    fi
+
     local u=$(whoami)
     local curgrp=$(id -gn)
-    local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut -d: -f4):" /etc/group |  cut -d: -f1)
+    # svn_info="$(svn info | egrep '^URL: ' 2> /dev/null)"
+    local defaultgrp=$(grep ":$(cat /etc/passwd 2> /dev/null| grep $u | cut -d: -f4):" /etc/group > /dev/null| cut -d: -f1)
+    # local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut -d: -f4):" /etc/group |  cut -d: -f1)
     [[ "$defaultgrp" == "" ]] && return 0
     if [ "$curgrp" != "$defaultgrp" ]; then
         echo "($curgrp)"
