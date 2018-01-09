@@ -1,3 +1,91 @@
+#!/usr/bin/env bash
+
+# Use Git’s colored diff when available
+hash git &>/dev/null
+if [ $? -eq 0 ]; then
+    function diff() {
+        git diff --no-index --color-words "$@"
+    }
+fi
+
+# Homebrew stuff for OS X
+hash brew &>/dev/null
+if [ $? -eq 0 ]; then
+
+    function bqg() {
+        if [ -z "${1}" ]; then
+            echo "E: You must give at least one search pattern"
+            return 1
+        fi
+
+        local aq="${1}"
+        brew search $aq | grep -i --color $aq
+    }
+
+    function biv() {
+        if [ -z "${1}" ]; then
+            echo "E: You must give at least one search pattern"
+            return 1
+        fi
+
+        local aq="${1}"
+        brew info $aq | head -n1
+    }
+fi
+
+# APT package manager stuff for Debian-derived Linux distributions
+hash apt &>/dev/null
+if [ $? -eq 0 ]; then
+
+    function aqg() {
+        if [ -z "${1}" ]; then
+            echo "E: You must give at least one search pattern"
+            return 1
+        fi
+
+        local aq="${1}"
+        #apt-cache search $aq | grep -v lib | grep -i --color $aq
+        apt-cache search $aq | grep -i --color $aq
+    }
+
+    function aiv() {
+        if [ -z "${1}" ]; then
+            echo "E: You must give at least one search pattern"
+            return 1
+        fi
+
+        local aq="${1}"
+        apt-cache show $aq | grep Version
+    }
+
+    function show_installed() {
+        grep Install /var/log/apt/history.log | sed 's/Install: //g' | sed 's/:[a-z0-9]*//g' | sed 's/(/[/g' | sed 's/)/]/g' | sed -e 's/\[[^][]*\]//g' | sed 's/ , /\n/g'
+    }
+
+fi
+
+# Pacman package manager stuff for Arch Linux
+hash pacman &>/dev/null
+if [ $? -eq 0 ]; then
+    function pacfiles() {
+        if [ -z "${1}" ]; then
+            echo 'Missing package name' 1>&2
+            return 1
+        fi
+        pacman -Q "${1}" -l
+    }
+
+    function pacqg() {
+        if [ -z "${1}" ]; then
+            echo "E: You must give at least one search pattern"
+            return 1
+        fi
+
+        local pacq="${1}"
+        pacman -Sl | awk {' print $2 '} | grep -v "^lib" | sort | grep -i --color $pacq
+    }
+fi
+
 # Simple calculator
 function calc() {
     local result=""
@@ -29,14 +117,6 @@ function fs() {
         du $arg .[^.]* *
     fi
 }
-
-# Use Git’s colored diff when available
-hash git &>/dev/null
-if [ $? -eq 0 ]; then
-    function diff() {
-        git diff --no-index --color-words "$@"
-    }
-fi
 
 # Create a data URL from a file
 function dataurl() {
@@ -121,18 +201,12 @@ function getcertnames() {
         return 1
     fi
 
-    local str="${1}"
-    if [[ $str == *"/"* ]]; then
-        local domain="$(echo $str | awk -F/ '{print $3}')"
-    else
-        local domain="$str"
-    fi
-
+    local domain="${1}"
     echo "Testing ${domain}…"
     echo # newline
 
     local tmp=$(echo -e "GET / HTTP/1.0\nEOT" \
-        | openssl s_client -connect "${domain}:443" -servername "${domain}" 2>&1);
+        | openssl s_client -connect "${domain}:443" 2>&1);
 
     if [[ "${tmp}" = *"-----BEGIN CERTIFICATE-----"* ]]; then
         local certText=$(echo "${tmp}" \
@@ -154,34 +228,23 @@ function getcertnames() {
 }
 
 function parse_bzr_dirty() {
-    [[ $(bzr status 2> /dev/null | wc -l) != 0 ]] && echo "*"
+        [[ $(bzr status 2> /dev/null | wc -l) != 0 ]] && echo "*"
 }
 
 function parse_bzr_changes() {
-    BZR_CHANGES=$(bzr status 2> /dev/null | wc -l)
-    [[ $BZR_CHANGES != 0 ]] && echo "[$BZR_CHANGES]"
-}
-
-function pacfiles() {
-    if [ -z "${1}" ]; then
-        echo "Missing package name" 1>&2
-        return 1
-    fi
-    pacman -Q "${1}" -l
+        BZR_CHANGES=$(bzr status 2> /dev/null | wc -l)
+        [[ $BZR_CHANGES != 0 ]] && echo "[$BZR_CHANGES]"
 }
 
 function parse_git_dirty() {
-    [[ $(git status 2> /dev/null | tail -n1) != *"working "*" clean"* ]] && echo "*"
+        [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
 }
 
 function parse_git_branch() {
-    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
+        git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
 }
 
 function show_group_not_default() {
-    if [ ! -f /etc/group ]; then
-        return
-    fi
     local u=$(whoami)
     local curgrp=$(id -gn)
     local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut -d: -f4):" /etc/group |  cut -d: -f1)
@@ -189,41 +252,6 @@ function show_group_not_default() {
     if [ "$curgrp" != "$defaultgrp" ]; then
         echo "($curgrp)"
     fi
-}
-
-function aqg() {
-    if [ -z "${1}" ]; then
-        echo "E: You must give at least one search pattern"
-        return 1
-    fi
-
-    local aq="${1}"
-    #apt-cache search $aq | grep -v "^lib"| grep -v "^python" | grep -v "^ttf" | grep -v "^ruby" | sort | grep -i --color $aq
-    apt-cache search $aq | grep -v "^lib" | grep -v "^ttf" | sort | grep -i --color $aq
-}
-
-function pacqg() {
-    if [ -z "${1}" ]; then
-        echo "E: You must give at least one search pattern"
-        return 1
-    fi
-
-    local pacq="${1}"
-    pacman -Sl | awk {' print $2 '} | grep -v "^lib" | sort | grep -i --color $pacq
-}
-
-function show_installed() {
-    grep Install /var/log/apt/history.log | sed 's/Install: //g' | sed 's/:amd64//g' | sed 's/(/[/g' | sed 's/)/]/g' | sed -e 's/\[[^][]*\]//g' | sed 's/ , /\n/g'
-}
-
-function aiv() {
-    if [ -z "${1}" ]; then
-        echo "E: You must give at least one search pattern"
-        return 1
-    fi
-
-    local aq="${1}"
-    apt-cache show $aq | grep Version
 }
 
 function psgrep() {
@@ -245,7 +273,7 @@ function cq() {
 
     local foo="${@}"
     local cipherquery=$(echo $foo 2>/dev/null| sed 's/\ /\:/g' )
-    local bar="$cipherquery:!eNULL:!aNULL:!ADH:!EXP:!PSK:!SRP:!DSS"
+    local bar="$cipherquery:!eNULL:!aNULL:!ADH:!EXP:!PSK:!SRP:!DSS:!ECDSA"
     cqn $bar | grep -v "PSK"
 }
 
@@ -258,20 +286,7 @@ function cqn() {
     local foo="${@}"
     local cipherquery=$(echo $foo 2>/dev/null| sed 's/\ /\:/g' )
     local bar="$cipherquery"
-    openssl ciphers -v "$bar" | column -t | grep -v "DH-"
-}
-
-function wp() {
-    if ! type wikipedia2text > /dev/null; then
-        echo "wikipedia2text not installed"
-        return 1
-    fi
-    if [ -z "${1}" ]; then
-        echo "E: You must give a hostname"
-        return 1
-    fi
-    local host="${1}"
-    wikipedia2text $host | $MANPAGER
+    openssl ciphers -v "$bar" | column -t | grep -v ECDSA | grep -v "DH-"
 }
 
 function tlsscan() {
@@ -289,8 +304,19 @@ function tlsscan() {
         | openssl s_client -connect $domain:443 -servername $domain -showcerts
 }
 
+function psgrep() {
+    if [ -z "${1}" ]; then
+        echo "E: You must give at least one search pattern"
+        return 1
+    fi
+
+    local psquery="${1}"
+    ps aux | head -n1
+    ps aux | grep -v 'grep' | grep -i --color $psquery
+}
+
 function parse_svn_dirty() {
-    [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo -n "*"
+ [[ $(svn info 2> /dev/null | wc -l) >1 ]] && echo "*"
 }
 
 function svn_test() {
@@ -326,7 +352,7 @@ function get_dir() {
     printf "%s" $(pwd | sed "s:$HOME:~:")
 }
 
-function set_titlebar() {
+function set_titlebar {
     case $TERM in
         *xterm*|ansi|rxvt)
             printf "\033]0;%s\007" "$*"
@@ -347,7 +373,7 @@ function nolines() {
 
 function noblanklines() {
     sed '/^$/d'
-}   
+}
 
 function 256colors() {
     local arg="${1}"
@@ -401,12 +427,12 @@ function 256colors() {
     fi
 }
 
-function setBackgroundColor()
+function set_background_color()
 {
     printf '\x1b[48;2;%s;%s;%sm' $1 $2 $3
 }
 
-function resetOutput()
+function reset_output()
 {
     echo -en "\x1b[0m\n"
 }
@@ -416,7 +442,7 @@ function resetOutput()
 # Echoes "$red $green $blue" where
 # $red $green and $blue are integers
 # ranging between 0 and 255 inclusive
-function rainbowColor()
+function rainbow_color()
 { 
     let h=$1/43
     let f=$1-43*$h
@@ -468,48 +494,48 @@ function truecolors() {
         }'
     elif [[ $arg == 2 ]]; then
         for i in `seq 0 127`; do
-            setBackgroundColor $i 0 0
+            set_background_color $i 0 0
             echo -en " "
         done
-        resetOutput
+        reset_output
         for i in `seq 255 -1 128`; do
-            setBackgroundColor $i 0 0
+            set_background_color $i 0 0
             echo -en " "
         done
-        resetOutput
+        reset_output
 
         for i in `seq 0 127`; do
-            setBackgroundColor 0 $i 0
+            set_background_color 0 $i 0
             echo -n " "
         done
-        resetOutput
+        reset_output
         for i in `seq 255 -1 128`; do
-            setBackgroundColor 0 $i 0
+            set_background_color 0 $i 0
             echo -n " "
         done
-        resetOutput
+        reset_output
 
         for i in `seq 0 127`; do
-            setBackgroundColor 0 0 $i
+            set_background_color 0 0 $i
             echo -n " "
         done
-        resetOutput
+        reset_output
         for i in `seq 255 -1 128`; do
-            setBackgroundColor 0 0 $i
+            set_background_color 0 0 $i
             echo -n " "
         done
-        resetOutput
+        reset_output
 
         for i in `seq 0 127`; do
-            setBackgroundColor `rainbowColor $i`
+            set_background_color `rainbow_color $i`
             echo -n " "
         done
-        resetOutput
+        reset_output
         for i in `seq 255 -1 128`; do
-            setBackgroundColor `rainbowColor $i`
+            set_background_color `rainbow_color $i`
             echo -n " "
         done
-        resetOutput
+        reset_output
     elif [[ $arg == 3 ]]; then
         printf "\x1b[38;2;255;100;0mTRUECOLOR\x1b[0m\n"
     else
@@ -562,6 +588,7 @@ function set_prompt() {
     # \$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)
 }
 
+
 # Determine the branch information for this subversion repository. No support
 # for svn status, since that needs to hit the remote repository.
 function set_svn_branch() {
@@ -588,13 +615,6 @@ function set_svn_branch() {
         fi
     fi
 }
-
-# function parse_svn_branch() {
-#     if hash svn &>/dev/null; then
-#         set_svn_branch
-#         echo -n "$BRANCH"
-#     fi
-# }
 
 function parse_svn_branch() {
     parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | egrep -o '(tags|branches)/[^/]+|trunk' | egrep -o '[^/]+$' | awk '{print " ("$1")" }'
@@ -709,4 +729,64 @@ function doihave() {
     fi
     echo "error: not implemented for your operating system"
     return 1
+}
+
+#*** SOURCE: http://www.linuxjournal.com/content/validating-ip-address-bash-script
+# Test an IP address for validity:
+# Usage:
+#      valid_ip IP_ADDRESS
+#      if [[ $? -eq 0 ]]; then echo good; else echo bad; fi
+#   OR
+#      if valid_ip IP_ADDRESS; then echo good; else echo bad; fi
+#
+function valid_ip()
+{
+    local  ip=$1
+    local  stat=1
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
+}
+
+function external_ip()
+{
+    wget -q -O - http://checkip.dyndns.org|sed s/[^0-9.]//g
+}
+
+#*** SOURCE: http://www.linuxjournal.com/content/validating-ip-address-bash-script
+# Test an IP address for validity:
+# Usage:
+#      valid_ip IP_ADDRESS
+#      if [[ $? -eq 0 ]]; then echo good; else echo bad; fi
+#   OR
+#      if valid_ip IP_ADDRESS; then echo good; else echo bad; fi
+#
+function valid_ip()
+{
+    local  ip=$1
+    local  stat=1
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
+}
+
+function external_ip()
+{
+    wget -q -O - http://checkip.dyndns.org|sed s/[^0-9.]//g
 }

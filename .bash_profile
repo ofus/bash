@@ -21,6 +21,20 @@ for file in ~/.{path,bash_functions,exports,bash_aliases,git_prompt}; do
 done
 unset file
 
+if [ -n "$PATH" ]; then
+  old_PATH=$PATH:; PATH=
+  while [ -n "$old_PATH" ]; do
+    x=${old_PATH%%:*}       # the first remaining entry
+    case $PATH: in
+      *:"$x":*) ;;         # already there
+      *) PATH=$PATH:$x;;    # not there yet
+    esac
+    old_PATH=${old_PATH#*:}
+  done
+  PATH=${PATH#:}
+  unset old_PATH x
+fi
+
 set_prompt
 
 # After each command, append to the history file and reread it
