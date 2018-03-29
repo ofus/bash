@@ -48,10 +48,11 @@ alias pacarm='sudo pacman -Qdtq'
 alias pacdl='sudo pacman -Sw'
 alias paci='pacman -Si'
 alias paclist='pacman -Q'
-alias pp="packages"
-alias pg="packages install"
-alias pq="packages search"
-alias pi="packages show"
+alias packages="pkg"
+alias pp="pkg"
+alias pg="pkg install"
+alias pq="pkg search"
+alias pi="pkg show"
 
 ## COLORS ##
 alias ls='ls --color=auto --ignore-backups'

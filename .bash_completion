@@ -116,6 +116,7 @@ function _PACKAGES()
     fi
 }
 complete -F _PACKAGES packages
+complete -F _PACKAGES pkg
 complete -F _PACKAGES pp
 
 function _PQ()
