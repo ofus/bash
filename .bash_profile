@@ -16,7 +16,7 @@ PATH="$HOME/bin:$PATH"
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
-for file in ~/.{path,bash_functions,exports,bash_aliases,git_prompt}; do
+for file in ~/.{path,bash_functions,exports,bash_aliases,git_prompt,extra}; do
     [ -r "$file" ] && source "$file"
 done
 unset file
