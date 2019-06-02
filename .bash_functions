@@ -796,3 +796,8 @@ function external_ip()
 {
     wget -q -O - http://checkip.dyndns.org|sed s/[^0-9.]//g
 }
+
+function internal_ip()
+{
+    ip -4 address | grep inet | grep -v 'inet 127' | sed 's/\//\t/g' | awk '{ print $2 }'
+}
