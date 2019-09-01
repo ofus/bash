@@ -407,7 +407,8 @@ function 256colors() {
         # and/or modify it under the terms of the Do What The Fuck You Want
         # To Public License, Version 2, as published by Sam Hocevar. See
         # http://sam.zoy.org/wtfpl/COPYING for more details.
-        for fgbg in 38 48 ; do #Foreground/Background
+        #for fgbg in 38 48 ; do #Foreground/Background
+        for fgbg in 38 ; do #Foreground/Background
                 for color in {0..256} ; do #Colors
                         #Display the color
                         if [[ $color -lt 10 ]]; then
