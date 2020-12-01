@@ -553,7 +553,7 @@ function truecolors() {
 function set_prompt() {
     OPTS=`getopt -o u:h:g:p:a:b:v: --long user:,host:,group:,pwd:,at:,bracket:,vcs: -n 'parse-options' -- "$@"`
 
-    if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+    if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; return 1 ; fi
 
     # echo "$OPTS"
     eval set -- "$OPTS"
@@ -579,7 +579,7 @@ function set_prompt() {
         -b | --bracket )    BRACKETCOLOR=$(tput setaf $2); shift 2 ;;
         -v | --vcs )        VCSCOLOR=$(tput setaf $2); shift 2 ;;
         -- ) shift; break ;;
-        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>] [-b <color>] [-v <color>]" 1>&2; exit 1; ;;
+        * ) echo "Usage: $0 [-u <color>] [-h <color>] [-a <color>] [-g <color>] [-p <color>] [-b <color>] [-v <color>]" 1>&2; return 1; ;;
       esac
     done
 
@@ -663,7 +663,7 @@ function speak_file() {
         espeak -f "$FILENAME"
     else
         echo "please install either espeak or festival"
-        exit 1
+        return 1
     fi
 }
 
