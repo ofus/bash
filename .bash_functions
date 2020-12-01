@@ -570,6 +570,7 @@ function set_prompt() {
     VCSCOLOR=$BIWHITE
 
     while true; do
+        hash termux-info
       case "$1" in
         -u | --user )       USERCOLOR=$(tput setaf $2); shift 2 ;;
         -h | --host )       HOSTCOLOR=$(tput setaf $2); shift 2 ;;
@@ -588,11 +589,15 @@ function set_prompt() {
     fi
 
     RESET=$(tput sgr0)
-    # $(__git_ps1 \" (%s)\")
-    # export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$BIWHITE\]\$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
-    export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$VCSCOLOR\]\$(__git_ps1 \" (%s)\")\$(parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+
+    # use shorter prompt for termux (mobile)
+    if hash termux-info &>/dev/null; then
+        export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\[$RESET\]\[$GROUPCOLOR\]\[$ATCOLOR\]\[$HOSTCOLOR\]\[$PWDCOLOR\]\W\[$BIWHITE\] ]\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    else
+        export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$VCSCOLOR\]\$(__git_ps1 \" (%s)\")\$(parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
+    fi
+
     export PS2="\[$ORANGE\]→ \[$RESET\]"
-    # \$([[ -n \$(git branch 2> /dev/null && parse_svn_branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch && parse_svn_branch)
 }
 
 
