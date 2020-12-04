@@ -570,7 +570,6 @@ function set_prompt() {
     VCSCOLOR=$BIWHITE
 
     while true; do
-        hash termux-info
       case "$1" in
         -u | --user )       USERCOLOR=$(tput setaf $2); shift 2 ;;
         -h | --host )       HOSTCOLOR=$(tput setaf $2); shift 2 ;;
@@ -591,7 +590,8 @@ function set_prompt() {
     RESET=$(tput sgr0)
 
     # use shorter prompt for termux (mobile)
-    if hash termux-info &>/dev/null; then
+    hash termux-info &>/dev/null
+    if [ $? -eq 0 ]; then
         export PS1="\[$BIWHITE\][ \[$USERCOLOR\]\[$RESET\]\[$GROUPCOLOR\]\[$ATCOLOR\]\[$HOSTCOLOR\]\[$PWDCOLOR\]\W\[$BIWHITE\] ]\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
     else
         export PS1="\[$BRACKETCOLOR\][ \[$USERCOLOR\]\u\[$RESET\]\[$GROUPCOLOR\]\$(show_group_not_default)\[$ATCOLOR\]@\[$HOSTCOLOR\]\H \[$PWDCOLOR\]\w\[$BRACKETCOLOR\] ]\[$RESET\]\[$VCSCOLOR\]\$(__git_ps1 \" (%s)\")\$(parse_svn_branch)\[$RESET\]\[$BIWHITE\]\$ \[$RESET\]"
