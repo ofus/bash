@@ -101,7 +101,7 @@ alias svnign='svn pe svn:ignore .'
 alias delsvn="find . -name .svn | xargs rm -rf"
 
 # https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/nyan/nyan.plugin.zsh
-if [[ -x `which nc` ]]; then
+if [[ -x `command -v nc` ]]; then
   alias nyan='nc -v nyancat.dakko.us 23' # nyan cat
 fi
 alias nls='npm list -g --depth=0'

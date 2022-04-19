@@ -301,7 +301,7 @@ _composer()
     if [[ -n $special ]]; then
         local packages=$cache/packages.list
         local providers=$cache/providers.list
-        if [ ! -f $packages -o $( which composer ) -nt $packages ]; then
+        if [ ! -f $packages -o $( command -v composer ) -nt $packages ]; then
             # checking existance of the packages list
             mkdir -p $cache
             composer show -a | grep -v '^No composer' >$packages
