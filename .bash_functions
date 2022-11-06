@@ -251,7 +251,7 @@ function show_group_not_default() {
 
     local u=$(whoami)
     local curgrp=$(id -gn)
-    # svn_info="$(svn info | egrep '^URL: ' 2> /dev/null)"
+    # svn_info="$(svn info | grep -E '^URL: ' 2> /dev/null)"
     local defaultgrp=$(grep ":$(cat /etc/passwd 2> /dev/null| grep $u | cut -d: -f4):" /etc/group > /dev/null| cut -d: -f1)
     # local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut -d: -f4):" /etc/group |  cut -d: -f1)
     [[ "$defaultgrp" == "" ]] && return 0
@@ -609,7 +609,7 @@ function set_svn_branch() {
         if [ -d ".svn" ]; then
 
             # Capture the output of the "git status" command.
-            svn_info="$(svn info | egrep '^URL: ' 2> /dev/null)"
+            svn_info="$(svn info | grep -E '^URL: ' 2> /dev/null)"
 
             # Get the name of the branch.
             branch_pattern="^URL: .*/(branches|tags)/([^/]+)"
@@ -629,7 +629,7 @@ function set_svn_branch() {
 }
 
 function parse_svn_branch() {
-    parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | egrep -o '(tags|branches)/[^/]+|trunk' | egrep -o '[^/]+$' | awk '{print " ("$1")" }'
+    parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | grep -E -o '(tags|branches)/[^/]+|trunk' | grep -E -o '[^/]+$' | awk '{print " ("$1")" }'
 }
 
 function parse_svn_url() {
