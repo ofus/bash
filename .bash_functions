@@ -770,7 +770,11 @@ function valid_ip()
 
 function external_ip()
 {
-    wget -q -O - http://checkip.dyndns.org|sed s/[^0-9.]//g
+    if type "cipherscan" > /dev/null 2>&1; then
+        wget -q -O - http://checkip.dyndns.org|sed s/[^0-9.]//g
+    else
+        echo "cipherscan not installed. Please visit https://github.com/mozilla/cipherscan"
+    fi
 }
 
 #*** SOURCE: http://www.linuxjournal.com/content/validating-ip-address-bash-script
@@ -806,4 +810,13 @@ function external_ip()
 function internal_ip()
 {
     ip -4 address | grep inet | grep -v 'inet 127' | sed 's/\//\t/g' | awk '{ print $2 }'
+}
+
+function xmppscan()
+{
+    if type "cipherscan" > /dev/null 2>&1; then
+        cipherscan -starttls xmpp $1:5222
+    else
+        echo "Cipherscan not installed.  Visit https://github.com/mozilla/cipherscan"
+    fi
 }
