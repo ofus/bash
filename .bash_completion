@@ -143,6 +143,7 @@ _PKG()
     local cur prev words cword
     # _init_completion || return
     OPTIONS=$(pkg 2>/dev/null | grep '\- ' | sed 's/- /\nZZ/g' | grep -v ZZ | cut -d ' ' -f 3 | tr '\n' ' ')
+    cur=${COMP_WORDS[COMP_CWORD]}
 
     if [[ "$cur" == -* ]]; then
         COMPREPLY=( $( compgen -W '--nodeps --version' -- "$cur" ) )
