@@ -44,7 +44,6 @@ if [ $? -eq 0 ]; then
         fi
 
         local aq="${1}"
-        #apt-cache search $aq | grep -v lib | grep -i --color $aq
         apt-cache search $aq | grep -i --color $aq
     }
 
@@ -91,7 +90,7 @@ function calc() {
     local result=""
     result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
     #                       └─ default (when `--mathlib` is used) is 20
-    #
+
     if [[ "$result" == *.* ]]; then
         # improve the output for decimal numbers
         printf "$result" |
@@ -251,9 +250,7 @@ function show_group_not_default() {
 
     local u=$(whoami)
     local curgrp=$(id -gn)
-    # svn_info="$(svn info | grep -E '^URL: ' 2> /dev/null)"
     local defaultgrp=$(grep ":$(cat /etc/passwd 2> /dev/null| grep $u | cut -d: -f4):" /etc/group > /dev/null| cut -d: -f1)
-    # local defaultgrp=$(grep ":$(cat /etc/passwd | grep $u | cut -d: -f4):" /etc/group |  cut -d: -f1)
     [[ "$defaultgrp" == "" ]] && return 0
     if [ "$curgrp" != "$defaultgrp" ]; then
         echo "($curgrp)"
@@ -397,7 +394,6 @@ function 256colors() {
         # and/or modify it under the terms of the Do What The Fuck You Want
         # To Public License, Version 2, as published by Sam Hocevar. See
         # http://sam.zoy.org/wtfpl/COPYING for more details.
-        #for fgbg in 38 48 ; do #Foreground/Background
         for fgbg in 38 ; do #Foreground/Background
                 for color in {0..256} ; do #Colors
                         #Display the color
@@ -412,8 +408,6 @@ function 256colors() {
                         #Display 10 colors per lines
                         if [[ $((($color - 15) % 36)) == 0 ]] ; then
                             echo #New line
-                        # elif [[ $color == 15 ]]; then
-                        #     echo
                         elif [[ $color == 231 ]]; then
                             echo
                         fi
@@ -545,7 +539,6 @@ function set_prompt() {
 
     if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; return 1 ; fi
 
-    # echo "$OPTS"
     eval set -- "$OPTS"
 
     BIWHITE='\e[1;97m'
@@ -672,7 +665,6 @@ function speak() {
     OPTS=`getopt -o d:v: --long download:,verbose: -n 'parse-options' -- "$@"`
     if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; return 1 ; fi
     eval set -- "$OPTS"
-    # echo "$OPTS"
 
     INPUT=$*
     STRINGNUM=0
@@ -683,18 +675,11 @@ function speak() {
 
      
     ary=($INPUT)
-    echo "---------------------------"
-    echo "Speech Script by Dan Fountain"
-    echo "TalkToDanF@gmail.com"
-    echo "---------------------------"
     for key in "${!ary[@]}" 
       do
         SHORTTMP[$STRINGNUM]="${SHORTTMP[$STRINGNUM]} ${ary[$key]}"
         LENGTH=$(echo ${#SHORTTMP[$STRINGNUM]})
-        #echo "word:$key, ${ary[$key]}"
-        #echo "adding to: $STRINGNUM"
         if [[ "$LENGTH" -lt "100" ]]; then
-          #echo starting new line
           SHORT[$STRINGNUM]=${SHORTTMP[$STRINGNUM]}
         else
           STRINGNUM=$(($STRINGNUM+1))
@@ -705,8 +690,6 @@ function speak() {
      
     for key in "${!SHORT[@]}"
       do
-        #echo "line: $key is: ${SHORT[$key]}"
-     
         echo "Playing line: $(($key+1)) of $(($STRINGNUM+1))"
         NEXTURL=$(echo ${SHORT[$key]} | xxd -plain | tr -d '\n' | sed 's/\(..\)/%\1/g')
         mpg123 -q "http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=$NEXTURL&tl=En-us"
