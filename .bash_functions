@@ -266,9 +266,10 @@ function psgrep() {
         return 1
     fi
 
-    local psquery="${1}"
-    ps aux | head -n1
-    ps aux | grep -v 'grep' | grep -i --color $psquery
+    local PSQUERY="${1}"
+    local PSGREP="$(ps aux | grep -v 'grep' | grep -i --color $PSQUERY)"
+
+    [[ ! -z "$PSGREP" ]] && ps aux | head -n1 && ps aux | grep -v 'grep' | grep -i --color $PSQUERY
 }
 
 function cq() {
@@ -308,17 +309,6 @@ function tlsscan() {
     fi
     echo -e "GET / HTTP/1.0\nEOT" \
         | openssl s_client -connect $domain:443 -servername $domain -showcerts
-}
-
-function psgrep() {
-    if [ -z "${1}" ]; then
-        echo "E: You must give at least one search pattern"
-        return 1
-    fi
-
-    local psquery="${1}"
-    ps aux | head -n1
-    ps aux | grep -v 'grep' | grep -i --color $psquery
 }
 
 function parse_svn_dirty() {
@@ -679,8 +669,18 @@ function speak() {
         return 1
     fi
 
+    OPTS=`getopt -o d:v: --long download:,verbose: -n 'parse-options' -- "$@"`
+    if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; return 1 ; fi
+    eval set -- "$OPTS"
+    # echo "$OPTS"
+
     INPUT=$*
     STRINGNUM=0
+    unset NEXTURL
+    unset SHORTTMP
+    unset SHORT
+    unset LENGTH
+
      
     ary=($INPUT)
     echo "---------------------------"
@@ -710,6 +710,7 @@ function speak() {
         echo "Playing line: $(($key+1)) of $(($STRINGNUM+1))"
         NEXTURL=$(echo ${SHORT[$key]} | xxd -plain | tr -d '\n' | sed 's/\(..\)/%\1/g')
         mpg123 -q "http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=$NEXTURL&tl=En-us"
+        echo "\"http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=$NEXTURL&tl=En-us\""
     done
 }
 
