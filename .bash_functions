@@ -804,3 +804,44 @@ function xmppscan()
         echo "Cipherscan not installed.  Visit https://github.com/mozilla/cipherscan"
     fi
 }
+
+hash ytplaylist-ls &>/dev/null
+    function ytplaylist-ls()
+    {
+        if ! hash yt-dlp 2> /dev/null && ! hash youtube-dl 2>/dev/null ; then
+            echo "No client app installed.  Install either yt-dlp or youtube-dl"
+            return 1
+        fi
+        if [ -z "${1}" ]; then
+            echo 'Missing playlist url' 1>&2
+            return 1
+        fi
+        
+        local URL="${1}"
+
+        if ! hash yt-dlp 2>/dev/null; then
+            PLAYLIST_TITLE=$(yt-dlp --no-warnings --flat-playlist --skip-download "$URL"  | grep "\[download\] Downloading playlist" | cut -d' ' -f 4-)
+            TMP_PLAYLIST_TITLE=$(mktemp --suffix="$PLAYLIST_TITLE.txt")
+            yt-dlp --flat-playlist --print title "$URL" > "$TMP_PLAYLIST_TITLE"
+            PLAYLIST_VIDEO_COUNT=$(grep -v "[Private|Deleted] video" "$TMP_PLAYLIST_TITLE" | wc -l)
+
+            echo "Playlist title: $PLAYLIST_TITLE"
+            echo "Number of videos: $PLAYLIST_VIDEO_COUNT"
+            echo
+            grep -v "[Private|Deleted] video" "$TMP_PLAYLIST_TITLE"
+        elif hash youtube-dl 2>/dev/null; then
+            PLAYLIST_TITLE=$(youtube-dl --no-warnings --flat-playlist --skip-download "$URL"  | grep "\[download\] Downloading playlist" | cut -d' ' -f 4-)
+            TMP_PLAYLIST_TITLE=$(mktemp --suffix="$PLAYLIST_TITLE.txt")
+            youtube-dl --flat-playlist -e "$URL" > "$TMP_PLAYLIST_TITLE"
+            PLAYLIST_VIDEO_COUNT=$(grep -v "[Private|Deleted] video" "$TMP_PLAYLIST_TITLE" | wc -l)
+
+            echo "Playlist title: $PLAYLIST_TITLE"
+            echo "Number of videos: $PLAYLIST_VIDEO_COUNT"
+            echo
+            grep -v "[Private|Deleted] video" "$TMP_PLAYLIST_TITLE"
+        else
+            echo "please install either yt-dlp or youtube-dl"
+            return 1
+        fi
+
+    }
