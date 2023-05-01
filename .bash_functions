@@ -819,7 +819,7 @@ hash ytplaylist-ls &>/dev/null
         
         local URL="${1}"
 
-        if ! hash yt-dlp 2>/dev/null; then
+        if hash yt-dlp 2>/dev/null; then
             PLAYLIST_TITLE=$(yt-dlp --no-warnings --flat-playlist --skip-download "$URL"  | grep "\[download\] Downloading playlist" | cut -d' ' -f 4-)
             TMP_PLAYLIST_TITLE=$(mktemp --suffix="$PLAYLIST_TITLE.txt")
             yt-dlp --flat-playlist --print title "$URL" > "$TMP_PLAYLIST_TITLE"
