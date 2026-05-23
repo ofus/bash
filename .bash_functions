@@ -634,7 +634,7 @@ function svndiff() {
     fi
 }
 
-function speak_file() {
+function speak1_file() {
     FILENAME="$1"
     if [ -z "${1}" ]; then
         echo "E: You must give at least one search pattern"
@@ -645,9 +645,9 @@ function speak_file() {
         echo "File not found"
         return 1
     fi
-    if hash espeak 2>/dev/null; then
+    if hash festival 2>/dev/null; then
         cat "$FILENAME" | festival --tts
-    elif hash festival 2>/dev/null; then
+    elif hash espeak 2>/dev/null; then
         espeak -f "$FILENAME"
     else
         echo "please install either espeak or festival"
@@ -656,7 +656,7 @@ function speak_file() {
 }
 
 # adapted from https://archive.fo/OgeSS#selection-9.152-9.1107
-function speak() {
+function speak1() {
     if ! hash mpg123; then
         echo "mpg123 is required."
         return 1
